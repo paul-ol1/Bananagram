@@ -17,12 +17,14 @@ body {
 
 		#grid{
 			display: grid;
-			grid-template-rows: 0.1fr 0.8fr 0.1fr;
+			grid-template-rows: 100px 1fr 100px;
+            grid-template-columns: 1fr 100px;
             grid-template-areas: 
-            "header"
-            "code"
-            "footer";
+            "header header"
+            "code code"
+            "footer2 footer1 ";
 			background-color: #000033;
+            
 			padding: 10px;
             height: 100%;
 		}
@@ -43,8 +45,8 @@ body {
             /*grid-template-columns: repeat(40, 1fr);
             grid-template-rows: repeat(15, 0.5fr); */
 
-            grid-template-columns: repeat(40, 36px);
-            grid-template-rows: repeat(15, 36px);
+            grid-template-columns: repeat(40, 2.45vmax);
+            grid-template-rows: repeat(15, 2vmax);
 
         }
 
@@ -52,13 +54,21 @@ body {
             border: 0.1px solid #8d0899;
         }
 
-        #footer {
-            grid-area: footer;
+        #wormhole {
+            grid-area: footer1;
             text-align: end;
             width: 100%;
             height: 100%;
             
 		}
+
+        #tilespositon{
+            grid-area: footer2;
+            background-color: white;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+        }
        
 
 	</style>
@@ -66,21 +76,16 @@ body {
 	<div id="grid">
 		<div id="header"><h1>Bananagram</h1></div>
 		<div id="content">
-            <!-- add the grid items -->
-            
-           
-            
-            <!-- repeat for 298 more items... -->
+
         </div>
-		<div id="footer">
+	
             <div id="tilespositon">
-                <H1 style="color: aliceblue;">PPPPP</H1>
-        </div>
-            <div id="wormhole">
+                <H1>PPPPP</H1>
+             </div>
             <img src="wormhole.gif" alt="Bag" width = "100px", height = "100px" >
         </div>  
         
-    </div>
+ 
 	</div>
 <script src="script.js"></script>
 </body>
