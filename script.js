@@ -27,7 +27,10 @@ let repartation = [
     { letter: "Z", count: 2 },
 ];
 let alltiles= [];
-let divsize = 600;
+let pos = document.getElementById("tilespositon");
+let divsize = 720;
+let gridwidth = screen.width / 40;
+let gridheight = screen.height / 26;
 let contentelem = document.getElementById("content");
 function createdivs() {
   for (let x = 0; x < divsize; x++) {
@@ -41,21 +44,38 @@ function createtiles(){
     for(let x = 0; x<repartation.length;x++){
         for(let y =0;y<repartation[x].count;y++){
             let tile = document.createElement('button');
+            tile.style.width=gridwidth-5+"px";
+            tile.style.height=gridheight-3+"px";
+            tile.style.borderRadius="7px";
+            tile.style.backgroundColor = "#C724B1";
+            tile.style.color= "#fff";
+            tile.style.opacity = "0.5";
+            tile.style.textShadow= "0 0 7px #fff,0 0 10px #fff,0 0 21px #fff";
+            tile.style.border="none"
+            tile.addEventListener("mouseover", (event) => {tile.style.opacity="1";tile.style.cursor="grab"});
+            tile.addEventListener("mouseout", (event) => {tile.style.opacity="0.5";});
             tile.textContent=repartation[x].letter;
             tile.className='tile';
             alltiles.push(tile);
+
         }
+
+
     }
+    pos.appendChild(alltiles[0])
 }
 function gridmaker(){
     console.log(screen.width);
     console.log(screen.height);
-    let gridsize = screen.width/41;
-    let gridlength= screen.height/26;
-    console.log(`repeat(40,${gridsize}) `);
-    contentelem.style.gridTemplateColumns="pap";
-    contentelem.style.gridTemplateRows=""+`repeat(15,${gridlength}); `;
+    contentelem.style.display="grid";
+    contentelem.style.gridArea="code";
+    contentelem.style.gridTemplateRows=`repeat(18,${gridheight}px) `;
+    contentelem.style.gridTemplateColumns = `repeat(40,${gridwidth}px) `;
+}
+function generatetiles(){
+
 }
 
 createtiles();
 createdivs();
+gridmaker();
