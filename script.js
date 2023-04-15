@@ -47,6 +47,15 @@ function createtiles(){
         }
     }
 }
+function gridmaker(){
+    console.log(screen.width);
+    console.log(screen.height);
+    let gridsize = screen.width/41;
+    let gridlength= screen.height/26;
+    console.log(`repeat(40,${gridsize}) `);
+    contentelem.style.gridTemplateColumns="pap";
+    contentelem.style.gridTemplateRows=""+`repeat(15,${gridlength}); `;
+}
 
 createtiles();
 createdivs();
