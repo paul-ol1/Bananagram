@@ -27,6 +27,7 @@ let repartation = [
     { letter: "Z", count: 2 },
 ];
 let alltiles= [];
+let usertiles= [];
 let pos = document.getElementById("tilespositon");
 let divsize = 720;
 let gridwidth = screen.width / 40;
@@ -36,6 +37,7 @@ function createdivs() {
   for (let x = 0; x < divsize; x++) {
     let newdiv = document.createElement("div");
     newdiv.className = "space";
+    
     contentelem.appendChild(newdiv);
   }
 }
@@ -51,31 +53,109 @@ function createtiles(){
             tile.style.color= "#fff";
             tile.style.opacity = "0.5";
             tile.style.textShadow= "0 0 7px #fff,0 0 10px #fff,0 0 21px #fff";
-            tile.style.border="none"
+            tile.style.border="none";
+            tile.style.margin="2px";
             tile.addEventListener("mouseover", (event) => {tile.style.opacity="1";tile.style.cursor="grab"});
             tile.addEventListener("mouseout", (event) => {tile.style.opacity="0.5";});
             tile.textContent=repartation[x].letter;
             tile.className='tile';
             alltiles.push(tile);
+            
+            tile.onmousedown = function(event) {
 
+        let shiftX = event.clientX - 
+        tile.getBoundingClientRect().left;
+        let shiftY = event.clientY - 
+        tile.getBoundingClientRect().top;
+        tile.style.position = 'absolute';
+        
+        document.body.append(tile);
+
+        moveAt(event.pageX, event.pageY);
+
+        // moves the tile at (pageX, pageY) coordinates
+        // taking initial shifts into account
+        function moveAt(pageX, pageY) {
+            
+            tile.style.left = pageX - shiftX + 'px';
+            tile.style.top = pageY - shiftY + 'px';
         }
+
+        function onMouseMove(event) {
+            moveAt(event.pageX, event.pageY);
+        }
+
+        // move the tile on mousemove
+        document.addEventListener('mousemove', onMouseMove);
+
+        // drop the tile, remove unneeded handlers
+        
+        tile.onmouseup = function(e) {
+            let elements= document.elementsFromPoint(e.clientX, e.clientY); 
+            document.removeEventListener('mousemove', onMouseMove);
+            tile.onmouseup = null;
+            document.body.removeChild(tile);
+            for(let i =0; i<elements.length;i++){
+                if(elements[i].id=="tilespositon"){
+                    elements[i].appendChild(tile);
+                    break;
+                }
+                
+                else if(elements[i].className=="space"){
+                    if(elements[i].hasChildNodes()){
+                        pos.appendChild(tile);
+                        tile.style.position = "";
+                        tile.style.left = "";
+                        tile.style.top = "";
+                    }
+                    else{
+                    elements[i].appendChild(tile);
+                    tile.style.left="";
+                    tile.style.top="";}
+                    
+                    break;
+                }
+                else{
+                if(i==elements.length-1){
+                    pos.appendChild(tile);
+                    tile.style.position="";
+                    tile.style.left="";
+                    tile.style.top="";
+                    
+                    break;
+                }
+                }
+            }
+        };
+
+        };
+
+        
+        tile.ondragstart = function() {
+        return false;
+        };
 
 
     }
-    pos.appendChild(alltiles[0])
-}
+}}
 function gridmaker(){
-    console.log(screen.width);
-    console.log(screen.height);
+    
     contentelem.style.display="grid";
     contentelem.style.gridArea="code";
     contentelem.style.gridTemplateRows=`repeat(18,${gridheight}px) `;
     contentelem.style.gridTemplateColumns = `repeat(40,${gridwidth}px) `;
+
 }
 function generatetiles(){
-
+    for(let x =0; x<12;x++){
+        let rand = Math.floor(Math.random() * alltiles.length);
+        usertiles.push(alltiles[rand]);
+        alltiles.splice(rand,1);
+    }
+    usertiles.map(x=>(pos.appendChild(x)))
 }
 
 createtiles();
 createdivs();
 gridmaker();
+generatetiles();
