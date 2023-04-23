@@ -1,0 +1,25 @@
+    button {
+        padding: 10px;
+        font-size: 20px;
+        background-color: #C724B1;
+        color: black;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #000033;
+        color: #C724B1;
+    }
+
+    button:hover {
+        opacity: 0.8;
+        cursor: pointer;
+    }
