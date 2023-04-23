@@ -30,36 +30,51 @@ let repartation = [
   { letter: "Z", count: 2 },
 ];
 const path = require("path"); // bring in the path module to help locate files
-const sqlite3 = require("sqlite3").verbose(); 
+const sqlite3 = require("sqlite3").verbose();
 
-let database = new sqlite3.Database('Game.db', function (error) {
-    if (error) {
-        console.error(err.message);
-        return {};
-    }
+let database = new sqlite3.Database("Game.db", function (error) {
+  if (error) {
+    console.error(err.message);
+    return {};
+  }
 });
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
 
 app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "home.html")); // res.sendFile sends the contents of a file
 });
+
 app.get("/newgame", function (req, res) {
-  let tiles= createtiles();
-createnewgame(tiles);
-const sqlite3 = require("sqlite3").verbose();
-database.all("SELECT GameID, GameTiles FROM Game", [], (err, rows) => {
-  if (err) {
-    throw err;
+  if (req.cookies.PlayerID === undefined) {
+    let tiles = createtiles();
+    createnewgame(tiles);
+    
+    setTimeout(x=>{
+      database.all("SELECT * FROM Players", (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        console.log(rows);
+        res.cookie("PlayerID", rows[rows.length - 1].PlayerID);
+      }
+    });
   }
-  rows.forEach((row) => {
-    console.log(row.name);
-  });
+    ,1000)};
+    
+
+  setTimeout(x=>{
+    console.log(req.cookies); 
+    res.sendFile(path.join(__dirname, "lobby.html"))},2000)
 });
 
 
-});
 // return jpg images, html, css, and js files
-app.get(["/*.jpg", "/*.png", "/*.css", "/*.html", "/*.js", "/*.jpeg"],function (req, res) {
-    res.sendFile(path.join(__dirname, req.path));}
+app.get(
+  ["/*.jpg", "/*.png", "/*.css", "/*.html", "/*.js", "/*.jpeg"],
+  function (req, res) {
+    res.sendFile(path.join(__dirname, req.path));
+  }
 );
 
 // Start listening for requests on the designated port
@@ -68,15 +83,35 @@ app.listen(port, function () {
   console.log("to end press Ctrl + C");
 });
 
-function createtiles(){
+function createtiles() {
   let alltiles = [];
-      for(let x = 0; x<repartation.length;x++){
-        for(let y =0;y<repartation[x].count;y++){
-          alltiles.push(repartation[x].letter);
-        }}
-        return alltiles.join("");
+  for (let x = 0; x < repartation.length; x++) {
+    for (let y = 0; y < repartation[x].count; y++) {
+      alltiles.push(repartation[x].letter);
+    }
+  }
+  return alltiles.join("");
 }
 
-function createnewgame(y){
+function createnewgame(y) {
   database.run(`INSERT INTO Game(GameTiles)VALUES('${y}')`);
+
+  database.all(
+    "SELECT GameID FROM Game ORDER BY GameID DESC LIMIT 1",
+    (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        database.run(`INSERT INTO Players(GameID)VALUES('${rows[0].GameID}')`);
+      }
+    }
+  );
+
+  setTimeout(x => {database.all("SELECT * FROM Players", (err, rows) => {
+    if (err) {
+      reject(err);
+    } else {
+      console.log(rows);
+    }
+  })}, 1000)
 }
