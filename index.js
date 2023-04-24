@@ -31,7 +31,9 @@ let repartation = [
 ];
 const path = require("path"); // bring in the path module to help locate files
 const sqlite3 = require("sqlite3").verbose();
-
+const bodyParser = require("body-parser"); // this pulls in body-parser
+const { all } = require("proxy-addr");
+app.use(bodyParser.json()); // this tells the server to look for JSON requests
 let database = new sqlite3.Database("Game.db", function (error) {
   if (error) {
     console.error(err.message);
@@ -45,29 +47,65 @@ app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "home.html")); // res.sendFile sends the contents of a file
 });
 
+app.get("/joingame", function (req, res) {
+  res.sendFile(path.join(__dirname, "lobbies.html")); // res.sendFile sends the contents of a file
+});
 app.get("/newgame", function (req, res) {
-  if (req.cookies.PlayerID === undefined) {
-    let tiles = createtiles();
-    createnewgame(tiles);
-    
-    setTimeout(x=>{
-      database.all("SELECT * FROM Players", (err, rows) => {
-      if (err) {
-        reject(err);
-      } else {
-        console.log(rows);
-        res.cookie("PlayerID", rows[rows.length - 1].PlayerID);
-      }
-    });
-  }
-    ,1000)};
-    
-
-  setTimeout(x=>{
-    console.log(req.cookies); 
-    res.sendFile(path.join(__dirname, "lobby.html"))},2000)
+  res.sendFile(path.join(__dirname, "lobby.html"));
 });
 
+app.post("/creatng", function (req, res) {
+  gn = req.body.gamename;
+  pname = req.body.playername;
+  async function ot() {
+    if (req.cookies.PlayerID === undefined) {
+      let tiles = createtiles();
+      let x = await createnewgame(tiles, gn);
+      let y = await createnewplayer(x[0].GameID, pname);
+      console.log(y);
+      res.cookie(
+        "PlayerID",
+        y[0].PlayerID,
+        "GameID",
+        y[0].GameID,
+        "PlayerName",
+        y[0].PlayerName,
+        {
+          maxAge: 100000,
+        }
+      );
+    }
+  }
+  ot();
+  res.send(y);
+});
+
+app.get("/allgames", function (req, res) {
+  async function onetime() {
+    let x = await getcurrentGandP();
+    res.send(x);
+  }
+  onetime();
+});
+
+/*
+    setTimeout((x) => {
+      database.all("SELECT * FROM Players", (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          res.cookie("PlayerID", rows[rows.length - 1].PlayerID, {
+            maxAge: 100000,
+          });
+        }
+      });
+    }, 10);
+  }
+
+  setTimeout((x) => {
+    
+    res.sendFile(path.join(__dirname, "lobby.html"));
+  }, 20);*/
 
 // return jpg images, html, css, and js files
 app.get(
@@ -93,25 +131,99 @@ function createtiles() {
   return alltiles.join("");
 }
 
-function createnewgame(y) {
-  database.run(`INSERT INTO Game(GameTiles)VALUES('${y}')`);
+async function createnewgame(gt, gn) {
+  database.run(
+    `INSERT INTO Game(GameTiles, Ongoing, GameName) VALUES('${gt}', 0, '${gn}')`
+  );
+  return new Promise((resolve, reject) => {
+    database.all(
+      "SELECT GameID FROM Game ORDER BY GameID DESC LIMIT 1",
+      (err, row) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(row);
+        }
+      }
+    );
+  });
+}
 
-  database.all(
-    "SELECT GameID FROM Game ORDER BY GameID DESC LIMIT 1",
-    (err, rows) => {
+async function createnewplayer(gid, pname) {
+  database.run(
+    `INSERT INTO Players (GameID, PlayerName) VALUES(${gid}, '${pname}')`
+  );
+  return new Promise((resolve, reject) => {
+    database.all(
+      "SELECT * FROM Players ORDER BY PlayerID DESC LIMIT 1",
+      (err, row) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(row);
+        }
+      }
+    );
+  });
+}
+
+async function getcurrentgames() {
+  return new Promise((resolve, reject) => {
+    database.all("SELECT GameID FROM Game WHERE Ongoing = 0", (err, rows) => {
       if (err) {
         reject(err);
       } else {
-        database.run(`INSERT INTO Players(GameID)VALUES('${rows[0].GameID}')`);
+        resolve(rows);
+      }
+    });
+  });
+}
+
+async function getcurrentplayers() {
+  let GameswPlayers = [];
+  let allplayers = [];
+  let allgames = await getcurrentgames();
+
+  for (let y = 0; y < allgames.length; y++) {
+    GameswPlayers[y] = {
+      GID: allgames[y].GameID,
+      PID: [],
+    };
+  }
+  return new Promise((resolve, reject) => {
+    database.all("SELECT * FROM Players", (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+}
+
+async function getcurrentGandP() {
+  let GameswPlayers = [];
+  let allplayers;
+  let allgames;
+  await getcurrentplayers().then((x) => {
+    allplayers = x;
+  });
+  await getcurrentgames().then((x) => {
+    allgames = x;
+  });
+  for (let y = 0; y < allgames.length; y++) {
+    GameswPlayers[y] = {
+      GID: allgames[y].GameID,
+      PID: [],
+    };
+  }
+
+  for (let y = 0; y < GameswPlayers.length; y++) {
+    for (let x = 0; x < allplayers.length; x++) {
+      if (GameswPlayers[y].GID == allplayers[x].GameID) {
+        GameswPlayers[y].PID.push(allplayers[x].PlayerID);
       }
     }
-  );
-
-  setTimeout(x => {database.all("SELECT * FROM Players", (err, rows) => {
-    if (err) {
-      reject(err);
-    } else {
-      console.log(rows);
-    }
-  })}, 1000)
+  }
+  return GameswPlayers;
 }
