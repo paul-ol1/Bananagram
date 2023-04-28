@@ -51,33 +51,67 @@ app.get("/joingame", function (req, res) {
   res.sendFile(path.join(__dirname, "lobbies.html")); // res.sendFile sends the contents of a file
 });
 app.get("/newgame", function (req, res) {
-  res.sendFile(path.join(__dirname, "lobby.html"));
+  res.sendFile(path.join(__dirname, "enterdetails.html"));
 });
 
-app.post("/creatng", function (req, res) {
-  gn = req.body.gamename;
-  pname = req.body.playername;
-  async function ot() {
-    if (req.cookies.PlayerID === undefined) {
+app.get("/movetolobby", function(req,res){
+  res.sendFile(path.join(__dirname, "lobby.html"));
+})
+app.post("/joingamelobby", function (req, res) {
+  let gameid = req.body.gid;
+  let playername = req.body.playern;
+  async function onetime() {
+    if (req.cookies.Playerdetails === undefined) {
+  let y = await createnewplayer(gameid, playername);
+  console.log(y);
+  res.cookie(
+    "Playerdetails",
+    JSON.stringify({
+      PlayerID: y[0].PlayerID,
+      GameID: y[0].GameID,
+      PlayerName: y[0].PlayerName,
+      GameName: req.body.gn,
+    })
+  );
+  res.send(y);
+}
+else{
+  res.send({ state: "ingame" });
+}
+}
+
+onetime();
+}
+
+  )
+app.post("/createng", function (req, res) {
+  gn = req.body.gamen;
+  pname = req.body.playern;
+  async function onetime() {
+    if (req.cookies.Playerdetails === undefined) {
       let tiles = createtiles();
       let x = await createnewgame(tiles, gn);
       let y = await createnewplayer(x[0].GameID, pname);
       console.log(y);
       res.cookie(
-        "PlayerID",
-        y[0].PlayerID,
-        "GameID",
-        y[0].GameID,
-        "PlayerName",
-        y[0].PlayerName,
-        {
-          maxAge: 100000,
-        }
+        "Playerdetails",
+        JSON.stringify({
+          PlayerID: y[0].PlayerID,
+          GameID: y[0].GameID,
+          PlayerName: y[0].PlayerName,
+          GameName: gn,
+        })
       );
+      res.send(y);
+    } else {
+      res.send({state:"ingame"});
     }
   }
-  ot();
-  res.send(y);
+  onetime();
+
+
+  
+  
 });
 
 app.get("/allgames", function (req, res) {
@@ -169,7 +203,7 @@ async function createnewplayer(gid, pname) {
 
 async function getcurrentgames() {
   return new Promise((resolve, reject) => {
-    database.all("SELECT GameID FROM Game WHERE Ongoing = 0", (err, rows) => {
+    database.all("SELECT GameID,GameName FROM Game WHERE Ongoing = 0", (err, rows) => {
       if (err) {
         reject(err);
       } else {
@@ -186,6 +220,7 @@ async function getcurrentplayers() {
 
   for (let y = 0; y < allgames.length; y++) {
     GameswPlayers[y] = {
+      GNAME: allgames[y].GameName,
       GID: allgames[y].GameID,
       PID: [],
     };
@@ -213,8 +248,10 @@ async function getcurrentGandP() {
   });
   for (let y = 0; y < allgames.length; y++) {
     GameswPlayers[y] = {
+      GNAME: allgames[y].GameName,
       GID: allgames[y].GameID,
       PID: [],
+      
     };
   }
 
