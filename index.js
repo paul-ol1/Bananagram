@@ -47,8 +47,16 @@ app.use(cookieParser());
 app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "home.html")); // res.sendFile sends the contents of a file
 });
-
-
+// return jpg images, html, css, and js files
+app.get(
+  ["/*.jpg", "/*.png", "/*.css", "/*.html", "/*.js", "/*.jpeg", "/*.gif"],
+  function (req, res) {
+    res.sendFile(path.join(__dirname, req.path));
+  }
+);
+app.get("/game", function (req, res) {
+  res.sendFile(path.join(__dirname, "game.html")); // res.sendFile sends the contents of a file
+});
 app.get("/joingame", function (req, res) {
   res.sendFile(path.join(__dirname, "lobbies.html")); // res.sendFile sends the contents of a file
 });
@@ -56,9 +64,108 @@ app.get("/newgame", function (req, res) {
   res.sendFile(path.join(__dirname, "enterdetails.html"));
 });
 
-app.get("/movetolobby", function(req,res){
+app.get("/movetolobby", function (req, res) {
   res.sendFile(path.join(__dirname, "lobby.html"));
-})
+});
+app.post("/sharetiles", function (req, res) {
+  let gameid = req.body.gid;
+  let allusers;
+  let alltiles;
+  let currtiles;
+  async function onetime() {
+    await allplayers(gameid).then((y) => {
+      allusers = y;
+    });
+
+    await getalltiles(gameid).then((y) => {
+      alltiles = y[0].GameTiles.split("");
+      for (let x = 0; x < allusers.length; x++) {
+        currtiles = alltiles.splice(0, 12);
+        currtiles = currtiles.join("");
+        database.run(
+          ` UPDATE Players SET PlayerTiles= '${currtiles}' WHERE PlayerID= ${allusers[x].PlayerID}`
+        );
+      }
+      alltiles = alltiles.join("");
+      returntiles(alltiles, gameid);
+      res.send(currtiles);
+    });
+  }
+  onetime();
+});
+app.post("/peel", function (req, res) {
+  let gameid = req.body.gid;
+  let allusers;
+  let alltiles;
+  async function onetime() {
+    await allplayers(gameid).then((y) => {
+      allusers = y;
+    });
+    await getalltiles(gameid).then((y) => {
+      alltiles = y[0].GameTiles.split("");
+    });
+
+    for (let x = 0; x < allusers.length; x++) {
+      let usertiles = allusers[x].PlayerTiles;
+      let newtile = alltiles.splice(0, 1);
+      usertiles += newtile[0];
+      database.run(
+        ` UPDATE Players SET PlayerTiles= '${usertiles}' WHERE PlayerID= ${allusers[x].PlayerID}`
+      );
+    }
+    alltiles = alltiles.join("");
+    database.run(
+      ` UPDATE Game SET GameTiles= '${alltiles}' WHERE GameID= ${gameid}`
+    );
+  }
+
+  onetime();
+});
+app.post("/droptile", function (req, res) {
+  let gameid = req.body.gid;
+  let gametile = req.body.tilecontent;
+  let userid = req.body.pid;
+  let alltiles;
+  let newtiles;
+  let usertiles = [];
+  async function onetime() {
+    await getalltiles(gameid).then((y) => {
+      alltiles = y[0].GameTiles.split("");
+      alltiles.push(gametile);
+      newtiles = alltiles.splice(0, 3);
+    });
+
+    await yourtiles(userid).then((y) => {
+      usertiles = y[0].PlayerTiles.split("");
+      newtiles.forEach((x) => {
+        usertiles.push(x);
+      });
+
+      usertiles = usertiles.join("");
+      database.run(
+        ` UPDATE Players SET PlayerTiles= '${usertiles}' WHERE PlayerID= ${userid}`
+      );
+      alltiles = alltiles.join("");
+      database.run(
+        ` UPDATE Game SET GameTiles= '${alltiles}' WHERE GameID= ${gameid}`
+      );
+    });
+
+    res.send(newtiles);
+  }
+  onetime();
+});
+
+app.post("/gettiles", function (req, res) {
+  let userid = req.body.pid;
+  async function onetime() {
+    let x = await yourtiles(userid);
+    x = x[0].PlayerTiles.split("");
+    res.send(x);
+  }
+  onetime();
+});
+
 app.post("/allplayers", function (req, res) {
   let gameid = req.body.gid;
   async function onetime() {
@@ -66,42 +173,49 @@ app.post("/allplayers", function (req, res) {
     res.send(x);
   }
   onetime();
-
+});
+app.post("/getgamestate", function (req, res) {
+  let gameid = req.body.gid;
+  let gamestate;
+  async function onetime() {
+    await getgamestate(gameid).then((x) => {
+      gamestate = "" + x[0].Ongoing;
+    });
+    res.send(gamestate);
+  }
+  onetime();
+});
+app.post("/launchgame", function (req, res) {
+  let gameid = req.body.gid;
+  database.run(` UPDATE Game SET Ongoing= 1 WHERE GameID= ${gameid}`);
 });
 app.post("/joingamelobby", function (req, res) {
   let gameid = req.body.gid;
   let playername = req.body.playern;
   async function onetime() {
     if (req.cookies.Playerdetails === undefined) {
-  let y = await createnewplayer(gameid, playername);
-  console.log(y);
-  res.cookie(
-    "Playerdetails",
-    JSON.stringify({
-      PlayerID: y[0].PlayerID,
-      GameID: y[0].GameID,
-      PlayerName: y[0].PlayerName,
-      GameName: req.body.gn,
-    })
-  );
-  res.send(y);
-}
-else{
-  res.send({ state: "ingame" });
-}
-}
-
-onetime();
-}
-
-  )
-  app.post("/removeplayer", function (req,res) {
-    database.run(
-      `DELETE FROM Players WHERE PlayerID= ${req.body.PlayerID}`
-    );
-    res.send("true");
+      let y = await createnewplayer(gameid, playername);
+      res.cookie(
+        "Playerdetails",
+        JSON.stringify({
+          PlayerID: y[0].PlayerID,
+          GameID: y[0].GameID,
+          PlayerName: y[0].PlayerName,
+          GameName: req.body.gn,
+        })
+      );
+      res.send(y);
+    } else {
+      res.send({ state: "ingame" });
+    }
   }
-  )
+
+  onetime();
+});
+app.post("/removeplayer", function (req, res) {
+  database.run(`DELETE FROM Players WHERE PlayerID= ${req.body.PlayerID}`);
+  res.send("true");
+});
 app.post("/createng", function (req, res) {
   gn = req.body.gamen;
   pname = req.body.playern;
@@ -110,7 +224,7 @@ app.post("/createng", function (req, res) {
       let tiles = createtiles();
       let x = await createnewgame(tiles, gn);
       let y = await createnewplayer(x[0].GameID, pname);
-      console.log(y);
+
       res.cookie(
         "Playerdetails",
         JSON.stringify({
@@ -122,14 +236,10 @@ app.post("/createng", function (req, res) {
       );
       res.send(y);
     } else {
-      res.send({state:"ingame"});
+      res.send({ state: "ingame" });
     }
   }
   onetime();
-
-
-  
-  
 });
 
 app.get("/allgames", function (req, res) {
@@ -191,9 +301,24 @@ function createtiles() {
       alltiles.push(repartation[x].letter);
     }
   }
+  alltiles = alltiles.sort((a, b) => 0.5 - Math.random());
   return alltiles.join("");
 }
 
+async function getgamestate(id) {
+  return new Promise((resolve, reject) => {
+    database.all(
+      `SELECT Ongoing FROM Game WHERE GameID = ${id}`,
+      (err, row) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(row);
+        }
+      }
+    );
+  });
+}
 async function createnewgame(gt, gn) {
   database.run(
     `INSERT INTO Game(GameTiles, Ongoing, GameName) VALUES('${gt}', 0, '${gn}')`
@@ -232,19 +357,8 @@ async function createnewplayer(gid, pname) {
 
 async function getcurrentgames() {
   return new Promise((resolve, reject) => {
-    database.all("SELECT GameID,GameName FROM Game WHERE Ongoing = 0", (err, rows) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(rows);
-      }
-    });
-  });
-}
-async function allplayers(x) {
-  return new Promise((resolve, reject) => {
     database.all(
-      `SELECT * FROM Players WHERE GameID = ${x}`,
+      "SELECT GameID,GameName FROM Game WHERE Ongoing = 0",
       (err, rows) => {
         if (err) {
           reject(err);
@@ -253,6 +367,17 @@ async function allplayers(x) {
         }
       }
     );
+  });
+}
+async function allplayers(x) {
+  return new Promise((resolve, reject) => {
+    database.all(`SELECT * FROM Players WHERE GameID = ${x}`, (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
   });
 }
 
@@ -294,7 +419,6 @@ async function getcurrentGandP() {
       GNAME: allgames[y].GameName,
       GID: allgames[y].GameID,
       PID: [],
-      
     };
   }
 
@@ -306,4 +430,40 @@ async function getcurrentGandP() {
     }
   }
   return GameswPlayers;
+}
+
+function getalltiles(id) {
+  return new Promise((resolve, reject) => {
+    database.all(
+      `SELECT GameTiles FROM Game WHERE GameID= ${id}`,
+      (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      }
+    );
+  });
+}
+
+function returntiles(remainingtiles, id) {
+  database.run(
+    ` UPDATE Game SET GameTiles= '${remainingtiles}' WHERE GameID= ${id}`
+  );
+}
+
+function yourtiles(id) {
+  return new Promise((resolve, reject) => {
+    database.all(
+      `SELECT PlayerTiles FROM Players WHERE PlayerID= ${id}`,
+      (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      }
+    );
+  });
 }
