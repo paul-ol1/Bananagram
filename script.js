@@ -52,6 +52,7 @@ function createtiles(){
             tile.style.backgroundColor = "#C724B1";
             tile.style.color= "#fff";
             tile.style.opacity = "0.5";
+            tile.style.fontSize="1rem"
             tile.style.textShadow= "0 0 7px #fff,0 0 10px #fff,0 0 21px #fff";
             tile.style.border="none";
             tile.style.margin="2px";

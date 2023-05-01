@@ -17,16 +17,29 @@ body {
 
 		#grid{
 			display: grid;
-			grid-template-rows: 1fr 100px;
-            grid-template-columns: 1fr 100px;
+			grid-template-rows: 1fr 150px;
+            grid-template-columns: 100px 1fr 180px;
             grid-template-areas:    
-            "code code"
-            "footer2 footer1 ";
+            "code code code"
+            "buttons tiles wormhole ";
 			background-color: #000033;
 			
             height: 100%;
 		}
 
+        button {
+        padding: 10px;
+        margin-top: 10px;
+        margin-bottom: 16px;
+        margin-left: 10px;
+        font-size: 25px;
+        
+        background-color: #C724B1;
+        color: black;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
 
         #content {
             width: 100%;
@@ -43,16 +56,23 @@ body {
             border: 0.1px solid #C724B1;
         }
 
-        #wormhole {
-            grid-area: footer1;
-            text-align: end;
+        #buttons{
+            grid-area: buttons;
+            text-align: center;
             width: 100%;
             height: 100%;
             
+
+        }
+        #wormhole {
+            grid-area: wormhole;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 		}
 
         #tilespositon{
-            grid-area: footer2;
+            grid-area: tiles;
             text-align: center;
             width: 100%;
             height: 100%;
@@ -66,11 +86,19 @@ body {
 		<div id="content">
 
         </div>
-	
+            <div id = "buttons">
+               
+                <button>Peel</button>
+                <button>Bananas</button>
+            </div>
+
             <div id="tilespositon">
                 
             </div>
-            <img src="wormhole.gif" alt="Bag" width = "100px", height = "100px" >
+            <div id = "wormhole">
+                <img src="wormhole.gif" alt="Bag" width = "100px", height = "100px" >
+            </div>
+            
         </div>  
         
  

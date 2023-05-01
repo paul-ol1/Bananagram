@@ -22,7 +22,6 @@
         fetch("/allgames")
         .then((response) => (response.json()))
         .then((data) =>{
-           
         resolve(data);
         })
   });
@@ -32,6 +31,7 @@
 
     async function createlobbies(){
         content.innerHTML="";
+        
         await getlobbies().then((y) => {
             
     for(let x = 0; x< y.length; x++){
@@ -39,7 +39,7 @@
             let lobby = document.createElement("div");
             lobby.style.width="250px";
             lobby.style.height="50px";
-            lobby.style.backgroundColor="#C724B1";
+            lobby.style.backgroundColor="#007bff";
             lobby.style.color="white";
             lobby.className="lobby";
             lobby.id=""+ y[x].GID;
@@ -48,7 +48,7 @@
             lobby.style.display= "flex";
             lobby.style.opacity = "0.8";
             let gamename = document.createElement('p');
-            gamename.textContent= y[x].GNAME+"'s Game";
+            gamename.textContent= y[x].GNAME;
             gamename.style.textAlign="center";
             gamename.style.width = "70%";
             let numofplayers= document.createElement('p');

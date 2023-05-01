@@ -41,11 +41,13 @@ let database = new sqlite3.Database("Game.db", function (error) {
   }
 });
 const cookieParser = require("cookie-parser");
+const { pid } = require("process");
 app.use(cookieParser());
 
 app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "home.html")); // res.sendFile sends the contents of a file
 });
+
 
 app.get("/joingame", function (req, res) {
   res.sendFile(path.join(__dirname, "lobbies.html")); // res.sendFile sends the contents of a file
@@ -57,6 +59,15 @@ app.get("/newgame", function (req, res) {
 app.get("/movetolobby", function(req,res){
   res.sendFile(path.join(__dirname, "lobby.html"));
 })
+app.post("/allplayers", function (req, res) {
+  let gameid = req.body.gid;
+  async function onetime() {
+    let x = await allplayers(gameid);
+    res.send(x);
+  }
+  onetime();
+
+});
 app.post("/joingamelobby", function (req, res) {
   let gameid = req.body.gid;
   let playername = req.body.playern;
@@ -83,6 +94,13 @@ else{
 onetime();
 }
 
+  )
+  app.post("/removeplayer", function (req,res) {
+    database.run(
+      `DELETE FROM Players WHERE PlayerID= ${req.body.PlayerID}`
+    );
+    res.send("true");
+  }
   )
 app.post("/createng", function (req, res) {
   gn = req.body.gamen;
@@ -122,6 +140,17 @@ app.get("/allgames", function (req, res) {
   onetime();
 });
 
+app.get("/myCookie", (req, res) => {
+  const myCookieValue = req.cookies.Playerdetails;
+  let myCookieObj;
+  try {
+    myCookieObj = JSON.parse(myCookieValue);
+  } catch (error) {
+    res.status(400).send("Invalid cookie value");
+    return;
+  }
+  res.send(myCookieObj);
+});
 /*
     setTimeout((x) => {
       database.all("SELECT * FROM Players", (err, rows) => {
@@ -210,6 +239,20 @@ async function getcurrentgames() {
         resolve(rows);
       }
     });
+  });
+}
+async function allplayers(x) {
+  return new Promise((resolve, reject) => {
+    database.all(
+      `SELECT * FROM Players WHERE GameID = ${x}`,
+      (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      }
+    );
   });
 }
 
