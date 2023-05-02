@@ -89,19 +89,29 @@ function createtiles(arr) {
           if (elements[i].id == "wormhole") {
             let newtiles;
             elements[i].appendChild(tile);
+            tile.style.left = "";
+            tile.style.top = "";
             clearInterval(checktileint);
             async function get3tiles() {
-               await droptile(tile.textContent).then((a) => {
+              console.log(tile.textContent);
+              await droptile(tile.textContent).then((a) => {
+                
                 newtiles = a;
+                console.log(newtiles);
+                tile.style.transition = "transform 4s ease-in-out";
+                tile.style.transform = "scale(0)";
+            
                 alltiles.splice(alltiles.indexOf(tile), 1);
-                usertiles.splice(alltiles.indexOf(tile), 1);
-                pos.removeChild(tile);
-                elements[i].removeChild(tile);
-
+                usertiles.splice(usertiles.indexOf(tile.textContent), 1);
                 newtiles.forEach((b) => {
                   usertiles.push(b);
                 });
+                setTimeout(tst=>{
+                elements[i].removeChild(tile);
                 checktileint = setInterval(checktiles, 1000);
+                createtiles(newtiles);
+                }, 5000);
+                
               });
             }
 
@@ -312,22 +322,15 @@ async function droptile(tile) {
     })
       .then((response) => response.json()) // we are expecting a text response
       .then((data) => {
-        resolve(data);
+        if (data != undefined) {
+          resolve(data);
+        } else {
+          reject("no data");
+        }
       });
   });
 }
-function peelfunc() {
-  let mybody = {
-    gid: Gameid,
-  };
-  fetch("/peel", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    }, // says that arguments are JSON formatted
-    body: JSON.stringify(mybody), // POST puts arguments in the message body
-  });
-}
+
 
 async function checktiles() {
   let clonearr = [];
@@ -339,6 +342,7 @@ async function checktiles() {
   let remainingtiles = [];
 
   await gettiles().then((x) => {
+    
     let currentusertiles = x;
     for (let i = 0; i < x.length; i++) {
       let index = clonearr.indexOf(currentusertiles[i]);
@@ -365,7 +369,20 @@ async function checktiles() {
   remainingtiles = [];
 }
 
-checktileint = setInterval(checktiles, 1000);
+function peelfunc() {
+  let mybody = {
+    gid: Gameid,
+  };
+  console.log('peel');
+  fetch("/peel", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    }, // says that arguments are JSON formatted
+    body: JSON.stringify(mybody), // POST puts arguments in the message body
+  });
+}
+checktileint = setInterval(checktiles, 2000);
 /*createtiles();
 createdivs();
 gridmaker();

@@ -94,6 +94,7 @@ app.post("/sharetiles", function (req, res) {
   onetime();
 });
 app.post("/peel", function (req, res) {
+  console.log('peel');
   let gameid = req.body.gid;
   let allusers;
   let alltiles;
@@ -122,6 +123,7 @@ app.post("/peel", function (req, res) {
   onetime();
 });
 app.post("/droptile", function (req, res) {
+  
   let gameid = req.body.gid;
   let gametile = req.body.tilecontent;
   let userid = req.body.pid;
@@ -137,6 +139,7 @@ app.post("/droptile", function (req, res) {
 
     await yourtiles(userid).then((y) => {
       usertiles = y[0].PlayerTiles.split("");
+      usertiles.splice(usertiles.indexOf(gametile),1);
       newtiles.forEach((x) => {
         usertiles.push(x);
       });
@@ -149,9 +152,9 @@ app.post("/droptile", function (req, res) {
       database.run(
         ` UPDATE Game SET GameTiles= '${alltiles}' WHERE GameID= ${gameid}`
       );
+      res.send(newtiles);
     });
 
-    res.send(newtiles);
   }
   onetime();
 });
