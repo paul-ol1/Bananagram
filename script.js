@@ -390,7 +390,6 @@ function getallwords() {
     for (let x = 0; x < tilesindex.length; x++) {
         let newarr = [];
         let horizontal = tilesindex[x];
-        console.log(horizontal);
         let vertical = tilesindex[x];
         let horizontalword = [];
         let verticalword = [];
@@ -401,7 +400,6 @@ function getallwords() {
             if (tilesindex[y] == horizontal + 1) {
                 horizontalword.push(tilesindex[y]);
                 horizontal = horizontal + 1;
-                console.log(horizontalword);
             }
 
             if (tilesindex[y] == vertical + 40) {
@@ -429,7 +427,6 @@ function getallwords() {
     }
 
     for (let x = 0; x < indexgrouping.length; x++) {
-        console.log(indexgrouping[x].length)
         for (let i = 0; i < indexgrouping[x].length; i++) {
             indexgrouping[x][i] = content[indexgrouping[x][i]].children[0].textContent;
         }
@@ -564,7 +561,6 @@ function checktilesallignment() {
     }
 
     for (let x = 0; x < tiles.length; x++) {
-        console.log(tiles[x]);
         if (tiles[x].left.elem != undefined) {
             let next = {
                 element: undefined,
@@ -791,7 +787,6 @@ function bananas() {
             userwords.push(x);
         })
 
-        console.log(userwords);
         let mybody = {
             gid: Gameid,
             words: userwords,

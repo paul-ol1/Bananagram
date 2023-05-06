@@ -166,7 +166,23 @@ app.post("/droptile", function (req, res) {
   }
   onetime();
 });
-
+app.post("/getgamestarted", function (req, res) {
+  let gameid = req.body.gid;
+  async function onetime() {
+    await checkgamestarted(gameid).then(
+      x=>{
+        if(x[0].Ongoing == 0){
+          res.send("false");
+        }
+        else{
+          res.send("true");  
+        }
+      }
+    );
+    
+  }
+  onetime();
+});
 app.post("/gettiles", function (req, res) {
   let userid = req.body.pid;
   async function onetime() {
@@ -208,14 +224,13 @@ app.post("/joingamelobby", function (req, res) {
       let y = await createnewplayer(gameid, playername);
       res.cookie(
         "Playerdetails",
-        JSON.stringify({
+        {
           PlayerID: y[0].PlayerID,
           GameID: y[0].GameID,
           PlayerName: y[0].PlayerName,
           GameName: req.body.gn,
-        }), {
-            maxAge: 7200000
-          }
+        },
+        { expires: new Date(Date.now() + 3600000) }
       );
       res.send(y);
     } else {
@@ -227,18 +242,15 @@ app.post("/joingamelobby", function (req, res) {
 });
 app.post("/bananas", function (req, res) {
   let userwords = req.body.words;
-  console.log(userwords);
   let gameid = req.body.gid;
   let playerid = req.body.pid;
   let allcorrect = true;
   userwords.forEach(x=>{
     if(!englishwords.includes(x)){
-      console.log(x);
       allcorrect = false;
       
     }
   })
-  console.log(allcorrect);
   if(allcorrect){
   database.run(`UPDATE Game SET Ongoing= 2 WHERE GameID= ${gameid}`);
   database.run(` UPDATE Game SET Winner = ${playerid} WHERE GameID= ${gameid}`);
@@ -514,6 +526,21 @@ function yourtiles(id) {
   return new Promise((resolve, reject) => {
     database.all(
       `SELECT PlayerTiles FROM Players WHERE PlayerID= ${id}`,
+      (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      }
+    );
+  });
+}
+
+function checkgamestarted(id){
+  return new Promise((resolve, reject) => {
+    database.all(
+      `SELECT Ongoing FROM Game WHERE GameID= ${id}`,
       (err, rows) => {
         if (err) {
           reject(err);
