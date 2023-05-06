@@ -109,6 +109,9 @@
         .then((response) => (response.json()))
         .then((data) =>{
             resolve(data);
+            if(data == "Invalid cookie value"){
+                window.location="/";
+            }
         })})};
 
         async function getusers(id){

@@ -40,6 +40,13 @@ let database = new sqlite3.Database("Game.db", function (error) {
     return {};
   }
 });
+
+const fs = require("fs");
+let englishwords = [];
+fs.readFile(path.join(__dirname, "words.txt"), "utf8", function (err, data) {
+  englishwords = data.toUpperCase().split("\n");
+});
+
 const cookieParser = require("cookie-parser");
 const { pid } = require("process");
 app.use(cookieParser());
@@ -54,6 +61,7 @@ app.get(
     res.sendFile(path.join(__dirname, req.path));
   }
 );
+
 app.get("/game", function (req, res) {
   res.sendFile(path.join(__dirname, "game.html")); // res.sendFile sends the contents of a file
 });
@@ -94,18 +102,18 @@ app.post("/sharetiles", function (req, res) {
   onetime();
 });
 app.post("/peel", function (req, res) {
-  console.log('peel');
   let gameid = req.body.gid;
   let allusers;
   let alltiles;
+
   async function onetime() {
     await allplayers(gameid).then((y) => {
       allusers = y;
     });
+
     await getalltiles(gameid).then((y) => {
       alltiles = y[0].GameTiles.split("");
     });
-
     for (let x = 0; x < allusers.length; x++) {
       let usertiles = allusers[x].PlayerTiles;
       let newtile = alltiles.splice(0, 1);
@@ -205,7 +213,9 @@ app.post("/joingamelobby", function (req, res) {
           GameID: y[0].GameID,
           PlayerName: y[0].PlayerName,
           GameName: req.body.gn,
-        })
+        }), {
+            maxAge: 7200000
+          }
       );
       res.send(y);
     } else {
@@ -215,8 +225,52 @@ app.post("/joingamelobby", function (req, res) {
 
   onetime();
 });
+app.post("/bananas", function (req, res) {
+  let userwords = req.body.words;
+  console.log(userwords);
+  let gameid = req.body.gid;
+  let playerid = req.body.pid;
+  let allcorrect = true;
+  userwords.forEach(x=>{
+    if(!englishwords.includes(x)){
+      console.log(x);
+      allcorrect = false;
+      
+    }
+  })
+  console.log(allcorrect);
+  if(allcorrect){
+  database.run(`UPDATE Game SET Ongoing= 2 WHERE GameID= ${gameid}`);
+  database.run(` UPDATE Game SET Winner = ${playerid} WHERE GameID= ${gameid}`);
+  res.send("true");}
+
+  else{
+    async function onetime() {
+      let playertiles;
+      let alltiles;
+      await yourtiles(playerid).then( x=>{
+        playertiles =x[0].PlayerTiles;
+      });
+
+      await getalltiles(gameid).then( x=>{
+        alltiles = x[0].GameTiles;
+      })
+      alltiles = alltiles + playertiles;
+      returntiles(alltiles,gameid);
+      database.run(
+        ` UPDATE Players SET PlayerTiles= '' WHERE PlayerID= ${playerid}`
+      );
+      res.send("false");
+    }
+
+    onetime();
+  }
+
+});
+
 app.post("/removeplayer", function (req, res) {
   database.run(`DELETE FROM Players WHERE PlayerID= ${req.body.PlayerID}`);
+
   res.send("true");
 });
 app.post("/createng", function (req, res) {
