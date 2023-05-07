@@ -18,7 +18,6 @@ let timer = document.getElementById("timer");
 let peel = document.getElementById("peel");
 let mybody;
 let tilesindex;
-let onwininterval;
 function createdivs() {
   for (let x = 0; x < divsize; x++) {
     let newdiv = document.createElement("div");
@@ -797,7 +796,6 @@ function bananas() {
       userwords.push(x);
     });
 
-    console.log(userwords);
     let mybody = {
       gid: Gameid,
       words: userwords,
@@ -960,13 +958,11 @@ async function winnerexist() {
   }).then((response) =>response.json())
   .then((data)=>{
     if(data!= null){
-      clearInterval(onwininterval);
-      onwininterval = null;
         if(yourid == data){
           onwin();
         }
         else{
-          onlose();
+          
         }
     }
 
@@ -977,7 +973,7 @@ async function winnerexist() {
 
 }
 
-onwininterval = setInterval(winnerexist, 2000);
+
 checktileint = setInterval(checktiles, 500);
 /*createtiles();
 createdivs();

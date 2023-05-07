@@ -167,7 +167,7 @@ app.post("/droptile", function (req, res) {
       if(alltiles.length>= 3){
       newtiles = alltiles.splice(0, 3);}
       else{
-        newtiles = alltiles.splice(0, alltiles.length);
+        
       }
     });
 
@@ -288,14 +288,12 @@ app.post("/bananas", function (req, res) {
   let gameid = req.body.gid;
   let playerid = req.body.pid;
   let allcorrect = true;
-  console.log(allcorrect);
   userwords.forEach((x) => {
     if (!englishwords.includes(x)) {
       allcorrect = false;
     }
   });
   if (allcorrect) {
-    console.log("win");
     database.run(`UPDATE Game SET Ongoing= 2 WHERE GameID= ${gameid}`);
     database.run(
       ` UPDATE Game SET Winner = ${playerid} WHERE GameID= ${gameid}`
@@ -303,7 +301,6 @@ app.post("/bananas", function (req, res) {
     res.send("true");
   } else {
     async function onetime() {
-      console.log('lose');
       let playertiles;
       let alltiles;
       await yourtiles(playerid).then((x) => {
