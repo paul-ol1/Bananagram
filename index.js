@@ -243,7 +243,6 @@ app.post("/getgamestate", function (req, res) {
     
     await getgamestate(gameid).then((x) => {
       gamestate = "" + x[0].Ongoing;
-      console.log(gamestate);
     });
     res.send(gamestate);
   }
@@ -252,7 +251,6 @@ app.post("/getgamestate", function (req, res) {
 
 app.post("/launchgame", function (req, res) {
   let gameid = req.body.gid;
-  console.log(gameid);
   database.run(` UPDATE Game SET Ongoing= 1 WHERE GameID= ${gameid}`);
   res.send("done");
 });
