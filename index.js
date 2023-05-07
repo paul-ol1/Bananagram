@@ -284,6 +284,11 @@ app.post("/joingamelobby", function (req, res) {
   onetime();
 });
 
+
+app.post("/userattempt", function (req, res) {
+  console.log(req.body);
+});
+
 app.post("/banana", function (req, res) {
   console.log(req.body);
   let userwords = req.body.words;

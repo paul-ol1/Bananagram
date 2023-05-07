@@ -803,7 +803,15 @@ async function bananas() {
       words: userwords,
       pid: yourid,
     };
+    fetch("/userattempt", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }, // says that arguments are JSON formatted
+      body: JSON.stringify(mybody), // POST puts arguments in the message body
+    });
 
+    /*
     fetch("/banana", {
       method: "POST",
       headers: {
@@ -822,8 +830,9 @@ async function bananas() {
 
           onlose();
         }
-      });
-  } else {
+      });*/
+  } 
+  else {
     alert("tiles are not connected or/and there are still tiles in hand");
   }
 }
