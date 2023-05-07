@@ -18,6 +18,7 @@ let timer = document.getElementById("timer");
 let peel = document.getElementById("peel");
 let mybody;
 let tilesindex;
+let onwininterval;
 function createdivs() {
   for (let x = 0; x < divsize; x++) {
     let newdiv = document.createElement("div");
@@ -824,12 +825,61 @@ function bananas() {
     alert("tiles are not connected or/and there are still tiles in hand");
   }
 }
+function onwin(){
+   gamediv.style.display = "none";
 
+   // Create a div element
+   let windiv = document.createElement("div");
+
+   // Set the style of the div
+   windiv.style.position = "fixed";
+   windiv.style.top = "50%";
+   windiv.style.left = "50%";
+   windiv.style.transform = "translate(-50%, -50%)";
+   windiv.style.textAlign = "center";
+
+   // Create a h1 element with the text "You Lose!!!"
+   let winText = document.createElement("h1");
+   winText.textContent = "You Win!!!";
+   winText.style.fontSize = "5em";
+   winText.style.color = "white";
+
+   // Create a button element with the text "Return Home"
+   const homeButton = document.createElement("button");
+   homeButton.textContent = "Return Home";
+   homeButton.style.marginTop = "20px";
+   homeButton.style.width = "300px";
+   homeButton.style.color = "white";
+
+   homeButton.addEventListener("click", function () {
+     document.cookie =
+       "Playerdetails=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+     let mybody = {
+       PlayerID: yourid,
+     };
+
+     fetch("/removeplayer", {
+       method: "POST",
+       headers: {
+         "Content-Type": "application/json",
+       }, // says that arguments are JSON formatted
+       body: JSON.stringify(mybody), // POST puts arguments in the message body
+     });
+
+     window.location.replace("/");
+   });
+   // Add the h1 and button elements to the div
+   windiv.appendChild(winText);
+   windiv.appendChild(homeButton);
+
+   // Add the div to the document
+   document.body.appendChild(windiv);
+}
 function onlose() {
   gamediv.style.display = "none";
 
   // Create a div element
-  const loseDiv = document.createElement("div");
+  let loseDiv = document.createElement("div");
 
   // Set the style of the div
   loseDiv.style.position = "fixed";
@@ -909,17 +959,24 @@ async function winnerexist() {
   }).then((response) =>response.json())
   .then((data)=>{
     if(data!= null){
-        
+      clearInterval(onwininterval);
+      onwininterval = null;
+        if(yourid == data){
+          onwin();
+        }
+        else{
+          onlose();
+        }
     }
 
     else{
-        console.log( "no winner")
+      
     }
   });
 
 }
 
-
+onwininterval = setInterval(winnerexist, 2000);
 checktileint = setInterval(checktiles, 500);
 /*createtiles();
 createdivs();
