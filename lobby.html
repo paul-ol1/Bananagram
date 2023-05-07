@@ -137,7 +137,8 @@
             yourid = y.PlayerID;
             userdetails=y;   
             });
-            setInterval(checkifgamestarted(Gameid),1000);
+            //setInterval(checkifgamestarted(Gameid),1000);
+            console.log(Gameid);
             let y = await getusers(Gameid).then(
                 x=>{
                     
