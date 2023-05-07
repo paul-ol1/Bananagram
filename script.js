@@ -813,10 +813,10 @@ function bananas() {
       }, // says that arguments are JSON formatted
       body: JSON.stringify(mybody), // POST puts arguments in the message body
     })
-      .then((response) => response.json()) // we are expecting a text response
+      .then((response) => response.text()) // we are expecting a text response
       .then((data) => {
         console.log(data);
-        if (data == false) {
+        if (data == "false") {
           window.addEventListener("beforeunload", (event) => {
             document.cookie =
               "Playerdetails=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";

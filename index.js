@@ -294,6 +294,7 @@ app.post("/bananas", function (req, res) {
     }
   });
   if (allcorrect) {
+    console.log("win");
     database.run(`UPDATE Game SET Ongoing= 2 WHERE GameID= ${gameid}`);
     database.run(
       ` UPDATE Game SET Winner = ${playerid} WHERE GameID= ${gameid}`
@@ -301,6 +302,7 @@ app.post("/bananas", function (req, res) {
     res.send("true");
   } else {
     async function onetime() {
+      console.log('lose');
       let playertiles;
       let alltiles;
       await yourtiles(playerid).then((x) => {
