@@ -192,6 +192,17 @@ async function startgame() {
     console.log(y);
     if(y=="0"){
         startstopwatch();
+        let mybody = {
+          gid: Gameid,
+        };
+        fetch("/launchgame", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          }, // says that arguments are JSON formatted
+          body: JSON.stringify(mybody), // POST puts arguments in the message body
+        });
+        
         sharetiles();
         setInterval(winnerexist, 1000);
 
