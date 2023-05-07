@@ -313,16 +313,20 @@ app.get("/allgames", function (req, res) {
 });
 
 app.get("/myCookie", (req, res) => {
-  const myCookieValue = req.cookies.Playerdetails;
+
+   const myCookieValue = req.cookies.Playerdetails;
    let myCookieObj;
-  if(myCookieValue!=undefined){
-     let myCookieObj = JSON.parse(myCookieValue);
-    console.log(myCookieObj);
-     res.send(myCookieObj);
-  }
-  else{
-    res.send("null");
-  }
+   if (myCookieValue != undefined) {
+     try {
+       myCookieObj = JSON.parse(myCookieValue);
+       res.send(myCookieObj);
+     } catch (error) {
+       res.status(400).send("Invalid cookie value");
+       return;
+     }
+   } else {
+     res.send("null");
+   }
  
 });
 /*
