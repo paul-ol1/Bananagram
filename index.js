@@ -137,8 +137,8 @@ app.post("/peel", function (req, res) {
 
     await getalltiles(gameid).then((y) => {
       alltiles = y[0].GameTiles.split("");
-      console.log(alltiles.length);
     });
+    if(alltiles.length>0){
     for (let x = 0; x < allusers.length; x++) {
       let usertiles = allusers[x].PlayerTiles;
       let newtile = alltiles.splice(0, 1);
@@ -148,8 +148,7 @@ app.post("/peel", function (req, res) {
       );
     }
     alltiles = alltiles.join("");
-    console.log(alltiles.length);
-    returntiles(alltiles,gameid);
+    returntiles(alltiles,gameid);}
   }
 
   onetime();
