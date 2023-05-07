@@ -851,7 +851,7 @@ function onlose() {
       body: JSON.stringify(mybody), // POST puts arguments in the message body
     });
 
-    window.location = "/";
+    window.location.replace("/");
   });
   // Add the h1 and button elements to the div
   loseDiv.appendChild(loseText);
@@ -876,7 +876,7 @@ async function onquit() {
      body: JSON.stringify(mybody), // POST puts arguments in the message body
    });
 
-   window.location = "/";
+   window.location.replace("/");
 }
 
 async function winnerexist() {
@@ -894,7 +894,7 @@ async function winnerexist() {
     body: JSON.stringify(mybody), // POST puts arguments in the message body
   });
 
-  window.location = "/";
+  window.location.replace("/");
 }
 
 checktileint = setInterval(checktiles, 500);
