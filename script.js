@@ -193,6 +193,9 @@ async function startgame() {
     if(y=="0"){
         startstopwatch();
         sharetiles();
+         let mybody = {
+           gid: Gameid,
+         };
         fetch("/launchgame", {
           method: "POST",
           headers: {
