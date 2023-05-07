@@ -93,22 +93,22 @@ app.post("/sharetiles", function (req, res) {
   let allusers;
   let alltiles;
   let currtiles;
+
   async function onetime() {
     await allplayers(gameid).then((y) => {
       allusers = y;
     });
-
     await getalltiles(gameid).then((y) => {
       alltiles = y[0].GameTiles.split("");
+      console.log("alltiles: "+ alltiles.length);
       for (let x = 0; x < allusers.length; x++) {
-
         if (allusers.length >= 1 && allusers.length <= 4){
           currtiles = alltiles.splice(0, 21);
         }
-         if (allusers.length >= 5 && allusers.length <= 6) {
+         else if (allusers.length >= 5 && allusers.length <= 6) {
            currtiles = alltiles.splice(0, 15);
          }
-         if (allusers.length >= 7 && allusers.length <= 8) {
+         else if (allusers.length >= 7 && allusers.length <= 8) {
           currtiles = alltiles.splice(0, 11);
          }
 
@@ -117,6 +117,7 @@ app.post("/sharetiles", function (req, res) {
           ` UPDATE Players SET PlayerTiles= '${currtiles}' WHERE PlayerID= ${allusers[x].PlayerID}`
         );
       }
+      console.log("returning length:"+ alltiles.length);
       alltiles = alltiles.join("");
       returntiles(alltiles, gameid);
       res.send(currtiles);
@@ -327,6 +328,7 @@ app.post("/createng", function (req, res) {
   async function onetime() {
     if (req.cookies.Playerdetails === undefined) {
       let tiles = createtiles();
+      console.log(tiles.length);
       let x = await createnewgame(tiles, gn);
       let y = await createnewplayer(x[0].GameID, pname);
 
@@ -405,6 +407,7 @@ function createtiles() {
       alltiles.push(repartation[x].letter);
     }
   }
+  console.log("createtiles:" + alltiles.length);
   alltiles = alltiles.sort((a, b) => 0.5 - Math.random());
   return alltiles.join("");
 }
