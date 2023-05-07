@@ -790,7 +790,7 @@ function checkSubset(needle, haystack) {
 
 function bananas() {
   if (checktilesallignment()) {
-    console.log("aligned")
+    console.log("all")
     let w = getallwords();
     let userwords = [];
     w.forEach((x) => {
