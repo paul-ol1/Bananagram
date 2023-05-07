@@ -190,31 +190,29 @@ async function startgame() {
   });
   await getgamestate(Gameid).then((y) => {
     console.log(y);
-    if(y=="0"){
-        startstopwatch();
-        sharetiles();
-         let mybody = {
-           gid: Gameid,
-         };
-        fetch("/launchgame", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          }, // says that arguments are JSON formatted
-          body: JSON.stringify(mybody), // POST puts arguments in the message body
-        })
-          .then((response) => response.text()) // we are expecting a text response
-          .then((data) => {
-            console.log(data);
-          });
-
+    if (y == "0") {
+      startstopwatch();
+      sharetiles();
+      let mybody = {
+        gid: Gameid,
+      };
+      fetch("/launchgame", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        }, // says that arguments are JSON formatted
+        body: JSON.stringify(mybody), // POST puts arguments in the message body
+      })
+        .then((response) => response.text()) // we are expecting a text response
+        .then((data) => {
+          console.log(data);
+        });
     }
-      if(y == "1"){
-        timer.style.display = "none";
-        gamediv.style.display = "grid";
-        resumegame();
-      }
-      
+    if (y == "1") {
+      timer.style.display = "none";
+      gamediv.style.display = "grid";
+      resumegame();
+    }
   });
   await getgamestate(Gameid).then((y) => {
     console.log(y);
@@ -256,7 +254,7 @@ function startstopwatch() {
     let mybody = {
       gid: Gameid,
     };
-    
+
     location.reload();
   }, start + 1000);
 }
@@ -824,55 +822,55 @@ function bananas() {
     alert("tiles are not connected or/and there are still tiles in hand");
   }
 }
-function onwin(){
-   gamediv.style.display = "none";
+function onwin() {
+  gamediv.style.display = "none";
 
-   // Create a div element
-   let windiv = document.createElement("div");
+  // Create a div element
+  let windiv = document.createElement("div");
 
-   // Set the style of the div
-   windiv.style.position = "fixed";
-   windiv.style.top = "50%";
-   windiv.style.left = "50%";
-   windiv.style.transform = "translate(-50%, -50%)";
-   windiv.style.textAlign = "center";
+  // Set the style of the div
+  windiv.style.position = "fixed";
+  windiv.style.top = "50%";
+  windiv.style.left = "50%";
+  windiv.style.transform = "translate(-50%, -50%)";
+  windiv.style.textAlign = "center";
 
-   // Create a h1 element with the text "You Lose!!!"
-   let winText = document.createElement("h1");
-   winText.textContent = "You Win!!!";
-   winText.style.fontSize = "5em";
-   winText.style.color = "white";
+  // Create a h1 element with the text "You Lose!!!"
+  let winText = document.createElement("h1");
+  winText.textContent = "You Win!!!";
+  winText.style.fontSize = "5em";
+  winText.style.color = "white";
 
-   // Create a button element with the text "Return Home"
-   const homeButton = document.createElement("button");
-   homeButton.textContent = "Return Home";
-   homeButton.style.marginTop = "20px";
-   homeButton.style.width = "300px";
-   homeButton.style.color = "white";
+  // Create a button element with the text "Return Home"
+  const homeButton = document.createElement("button");
+  homeButton.textContent = "Return Home";
+  homeButton.style.marginTop = "20px";
+  homeButton.style.width = "300px";
+  homeButton.style.color = "white";
 
-   homeButton.addEventListener("click", function () {
-     document.cookie =
-       "Playerdetails=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
-     let mybody = {
-       PlayerID: yourid,
-     };
+  homeButton.addEventListener("click", function () {
+    document.cookie =
+      "Playerdetails=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+    let mybody = {
+      PlayerID: yourid,
+    };
 
-     fetch("/removeplayer", {
-       method: "POST",
-       headers: {
-         "Content-Type": "application/json",
-       }, // says that arguments are JSON formatted
-       body: JSON.stringify(mybody), // POST puts arguments in the message body
-     });
+    fetch("/removeplayer", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }, // says that arguments are JSON formatted
+      body: JSON.stringify(mybody), // POST puts arguments in the message body
+    });
 
-     window.location.replace("/");
-   });
-   // Add the h1 and button elements to the div
-   windiv.appendChild(winText);
-   windiv.appendChild(homeButton);
+    window.location.replace("/");
+  });
+  // Add the h1 and button elements to the div
+  windiv.appendChild(winText);
+  windiv.appendChild(homeButton);
 
-   // Add the div to the document
-   document.body.appendChild(windiv);
+  // Add the div to the document
+  document.body.appendChild(windiv);
 }
 function onlose() {
   gamediv.style.display = "none";
@@ -926,25 +924,24 @@ function onlose() {
 }
 
 async function onquit() {
-   document.cookie =
-     "Playerdetails=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
-   let mybody = {
-     PlayerID: yourid,
-   };
+  document.cookie =
+    "Playerdetails=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+  let mybody = {
+    PlayerID: yourid,
+  };
 
-   fetch("/removeplayer", {
-     method: "POST",
-     headers: {
-       "Content-Type": "application/json",
-     }, // says that arguments are JSON formatted
-     body: JSON.stringify(mybody), // POST puts arguments in the message body
-   });
+  fetch("/removeplayer", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    }, // says that arguments are JSON formatted
+    body: JSON.stringify(mybody), // POST puts arguments in the message body
+  });
 
-   window.location.replace("/");
+  window.location.replace("/");
 }
 
 async function winnerexist() {
-  
   let mybody = {
     gid: Gameid,
   };
@@ -955,25 +952,23 @@ async function winnerexist() {
       "Content-Type": "application/json",
     }, // says that arguments are JSON formatted
     body: JSON.stringify(mybody), // POST puts arguments in the message body
-  }).then((response) =>response.json())
-  .then((data)=>{
-    if(data!= null){
-        if(yourid == data){
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data != null) {
+        clearInterval(onwininterval);
+        onwininterval = null;
+        if (yourid == data) {
           onwin();
+        } else {
+          onlose();
         }
-        else{
-          
-        }
-    }
-
-    else{
-      
-    }
-  });
-
+      } else {
+      }
+    });
 }
 
-
+//onwininterval = setInterval(winnerexist, 2000);
 checktileint = setInterval(checktiles, 500);
 /*createtiles();
 createdivs();
