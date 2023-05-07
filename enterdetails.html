@@ -124,6 +124,10 @@ async function getmycookie(){
             resolve(data);
 			console.log(data);
             
+			
+			if(data != null){
+				window.location = "/game";
+            }
         })})};
 getmycookie();
 </script>
