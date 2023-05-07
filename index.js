@@ -168,7 +168,6 @@ app.post("/getgamestarted", function (req, res) {
   let gameid = req.body.gid;
   async function onetime() {
     await checkgamestarted(gameid).then((x) => {
-      console.log(x[0].Ongoing);
       if (x[0].Ongoing == 0) {
         res.send("false");
       } else {
@@ -180,7 +179,6 @@ app.post("/getgamestarted", function (req, res) {
 });
 app.post("/gettiles", function (req, res) {
   let userid = req.body.pid;
-  console.log(userid);
   
   async function onetime() {
     await yourtiles(userid).then( x=>{
@@ -341,7 +339,6 @@ app.get("/myCookie", (req, res) => {
    if (myCookieValue != undefined) {
     res.send(myCookieValue);
    } else {
-    console.log("null")
      res.send("null");
    }
  
