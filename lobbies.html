@@ -4,10 +4,26 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        
+
+        img {
+            position: fixed;
+            top: 0;
+            left: 0;
+            margin: 10px;
+}
+
+    </style>
 </head>
 <body>
+    <div id="return">
+        <a href="/"><img src="/return.png " alt="return" style="width: 50px;height: 50px;"></a>
+  
+</div>
     <div class="" id="content">
 
     </div>
@@ -31,7 +47,7 @@
 
     async function createlobbies(){
         content.innerHTML="";
-        
+        await getmycookie();
         await getlobbies().then((y) => {
             
     for(let x = 0; x< y.length; x++){
@@ -67,7 +83,7 @@
                 lobby.style.opacity= "0.8";
                 lobby.style.cursor="auto";
             })
-            
+
                 lobby.addEventListener("click", function(){
                 clearInterval(interval);
                 interval = null;
@@ -143,6 +159,7 @@
   
        
     }
+    createlobbies();
     interval = setInterval(createlobbies, 3000);
 
 
@@ -168,6 +185,10 @@
         .then((data) =>{
             console.log(data);
             resolve(data);
+
+            if(data != "null"){
+				window.location = "/game";
+            }
             /*
             resolve(data);
             if(data == "Invalid cookie value"){
