@@ -209,7 +209,7 @@ app.post("/split", function (req, res) {
     await getaction(gameid).then(x=>{
       if(x[0].Action != undefined){
       console.log(x[0].Action);
-      res.send(x[0].Action);}
+      res.send(""+x[0].Action);}
     })
   }
   onetime();

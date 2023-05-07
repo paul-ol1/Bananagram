@@ -154,7 +154,9 @@
             });
 
             getaction(Gameid).then(x=>{
-                console.log(x);
+                if(x== "split"){
+                    window.location.href="/game"; 
+                }
             });
             /*await getgamestate(Gameid).then(
                 x=>{
