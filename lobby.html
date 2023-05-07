@@ -109,7 +109,7 @@
         .then((response) => (response.json()))
         .then((data) =>{
             resolve(data);
-            if(data == "Invalid cookie value"){
+            if(data == ["Invalid cookie value"]){
                 window.location="/";
             }
         })})};
