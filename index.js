@@ -203,17 +203,6 @@ res.send(x);
   }
   onetime();
 });
-app.post("/getgamestate", function (req, res) {
-  let gameid = req.body.gid;
-  let gamestate;
-  async function onetime() {
-    await getgamestate(gameid).then((x) => {
-      gamestate = "" + x[0].Ongoing;
-    });
-    res.send(gamestate);
-  }
-  onetime();
-});
 app.post("/launchgame", function (req, res) {
   let gameid = req.body.gid;
   database.run(` UPDATE Game SET Ongoing= 1 WHERE GameID= ${gameid}`);
