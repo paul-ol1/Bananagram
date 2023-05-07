@@ -192,11 +192,7 @@ async function startgame() {
     gamediv.style.display = "grid";
     createdivs();
     gridmaker();
-    await gettiles().then((x) => {
-      usertiles = x;
-      createtiles(x);
-    });        
-    sharetiles();
+    
 
          let mybody = {
            gid: Gameid,
@@ -222,6 +218,11 @@ async function startgame() {
       }
       
   });
+  await gettiles().then((x) => {
+    usertiles = x;
+    createtiles(x);
+  });
+  sharetiles();
   
 }
 async function resumegame() {
