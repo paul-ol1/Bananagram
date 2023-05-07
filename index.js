@@ -88,7 +88,17 @@ app.post("/sharetiles", function (req, res) {
     await getalltiles(gameid).then((y) => {
       alltiles = y[0].GameTiles.split("");
       for (let x = 0; x < allusers.length; x++) {
-        currtiles = alltiles.splice(0, 12);
+
+        if (allusers.length >= 1 && allusers.length <= 4){
+          currtiles = alltiles.splice(0, 21);
+        }
+         if (allusers.length >= 5 && allusers.length <= 6) {
+           currtiles = alltiles.splice(0, 15);
+         }
+         if (allusers.length >= 7 && allusers.length <= 8) {
+          currtiles = alltiles.splice(0, 11);
+         }
+
         currtiles = currtiles.join("");
         database.run(
           ` UPDATE Players SET PlayerTiles= '${currtiles}' WHERE PlayerID= ${allusers[x].PlayerID}`
@@ -208,7 +218,6 @@ app.post("/split", function (req, res) {
     async function onetime() {
     await getaction(gameid).then(x=>{
       if(x[0].Action != undefined){
-      console.log(x[0].Action);
       res.send(""+x[0].Action);}
     })
   }
