@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game</title>
     <style>
+        #timer{
+            font-size: 16rem;
+            color: aliceblue;
+            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
 body {
 			margin: 0;
@@ -80,6 +86,7 @@ body {
 </head>
 <body>
 
+    <h2 id="timer"></h2>
 	<div id="grid">
 		
 		<div id="content">
@@ -91,7 +98,7 @@ body {
                 </div>
                 <div id="bananasdiv"><button id="bananas" onclick="bananas()">Bananas</button></div>
 
-                <div id="giveupdiv" "><button id="giveup" onclick="onquit()">Give Up</button></div>
+                <div id="giveupdiv" "><button id="giveup" onclick="onquit()">Give up</button></div>
 
             </div>
             <div id="tilespositon">
