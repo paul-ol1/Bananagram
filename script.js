@@ -880,21 +880,28 @@ async function onquit() {
 }
 
 async function winnerexist() {
-  document.cookie =
-    "Playerdetails=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+  
   let mybody = {
     gid: Gameid,
   };
 
-  fetch("/removeplayer", {
+  fetch("/gamewon", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     }, // says that arguments are JSON formatted
     body: JSON.stringify(mybody), // POST puts arguments in the message body
-  });
+  }).then((response) =>response.json())
+  .then((data)=>{
+    if(data!= null){
+        
+    }
 
-  window.location.replace("/");
+    else{
+        console.log( "no winner")
+    }
+  });
+  
 }
 
 checktileint = setInterval(checktiles, 500);
