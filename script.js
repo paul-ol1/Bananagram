@@ -798,20 +798,17 @@ function bananas() {
       userwords.push(x);
     });
 
-    let mybody = {
+    let body = {
       gid: Gameid,
       words: userwords,
       pid: yourid,
     };
-
-    console.log(mybody);
-
     fetch("/bananas", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       }, // says that arguments are JSON formatted
-      body: JSON.stringify(mybody), // POST puts arguments in the message body
+      body: JSON.stringify(body), // POST puts arguments in the message body
     })
       .then((response) => response.text()) // we are expecting a text response
       .then((data) => {
