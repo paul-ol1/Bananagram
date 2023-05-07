@@ -314,7 +314,7 @@ app.get("/allgames", function (req, res) {
 
 app.get("/myCookie", (req, res) => {
   const myCookieValue = req.cookies.Playerdetails;
-  res.send(JSON.parse(myCookieValue));
+  res.send({details:JSON.parse(myCookieValue)});
 });
 /*
     setTimeout((x) => {
