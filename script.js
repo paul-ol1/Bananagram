@@ -192,14 +192,16 @@ async function startgame() {
     if(y=="0"){
         startstopwatch();
         sharetiles();
+        setInterval(winnerexist, 1000);
 
     }
       if(y == "1"){
         timer.style.display = "none";
         gamediv.style.display = "grid";
         resumegame();
+        setInterval(winnerexist, 1000);
       }
-      setInterval(winnerexist, 1000);
+      
   });
 }
 async function resumegame() {
