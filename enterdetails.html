@@ -122,6 +122,7 @@ async function getmycookie(){
         .then((response) => (response.json()))
         .then((data) =>{
             resolve(data);
+			console.log(data);
             if(data == "null"){
 
             }
