@@ -56,7 +56,9 @@
             numofplayers.textContent= "Players: "+y[x].PID.length;
             lobby.appendChild(gamename);
             lobby.appendChild(numofplayers);
-            lobby.addEventListener("mouseover", function(event){
+            
+            if(y[x].PID.length< 8){
+                lobby.addEventListener("mouseover", function(event){
                 lobby.style.opacity= "1";
                 lobby.style.cursor="pointer";
             })
@@ -65,7 +67,8 @@
                 lobby.style.opacity= "0.8";
                 lobby.style.cursor="auto";
             })
-            lobby.addEventListener("click", function(){
+            
+                lobby.addEventListener("click", function(){
                 clearInterval(interval);
                 interval = null;
                 let lobbyid = lobby.id;
@@ -130,6 +133,8 @@
                 x.style.cursor= "pointer";
             })
            })
+            }
+            
             
             content.appendChild(lobby);}
             
@@ -138,7 +143,7 @@
   
        
     }
-    interval = setInterval(createlobbies, 1000);
+    interval = setInterval(createlobbies, 3000);
 
 
     function joingame(playername, gameid, gamename){
