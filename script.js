@@ -804,7 +804,7 @@ async function bananas() {
       pid: yourid,
     };
 
-    fetch("/bananas", {
+    fetch("/banana", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

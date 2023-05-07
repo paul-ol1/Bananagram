@@ -284,7 +284,8 @@ app.post("/joingamelobby", function (req, res) {
   onetime();
 });
 
-app.post("/bananas", function (req, res) {
+app.post("/banana", function (req, res) {
+  console.log(req.body);
   let userwords = req.body.words;
   let gameid = req.body.gid;
   let playerid = req.body.pid;
