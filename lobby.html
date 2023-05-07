@@ -108,7 +108,7 @@
         fetch("/myCookie")
         .then((response) => (response.json()))
         .then((data) =>{
-            console.log(data);
+            resolve(data);
             /*
             resolve(data);
             if(data == "Invalid cookie value"){
@@ -120,7 +120,7 @@
 
 console.log(getmycookie());
 
-/*
+
         async function getusers(id){
             let mybody = {
                 gid : id
@@ -218,7 +218,7 @@ console.log(getmycookie());
             });})
          };
 
-        //tinterval = setInterval(designlobby,1000);*/
+        //tinterval = setInterval(designlobby,1000);
         
     </script>
 </body>
