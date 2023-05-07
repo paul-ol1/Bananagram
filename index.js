@@ -295,8 +295,6 @@ app.post("/bananas", function (req, res) {
 
 app.post("/removeplayer", function (req, res) {
   database.run(`DELETE FROM Players WHERE PlayerID= ${req.body.PlayerID}`);
-
-  res.send("true");
 });
 app.post("/createng", function (req, res) {
   gn = req.body.gamen;
