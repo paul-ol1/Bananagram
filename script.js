@@ -788,9 +788,8 @@ function checkSubset(needle, haystack) {
   return true;
 }
 
-function bananas() {
+async function bananas() {
   if (checktilesallignment()) {
-    console.log("all")
     let w = getallwords();
     let userwords = [];
     w.forEach((x) => {
@@ -798,26 +797,28 @@ function bananas() {
       userwords.push(x);
     });
 
-    let body = {
+    console.log(userwords);
+    let mybody = {
       gid: Gameid,
       words: userwords,
       pid: yourid,
     };
+
     fetch("/bananas", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       }, // says that arguments are JSON formatted
-      body: JSON.stringify(body), // POST puts arguments in the message body
+      body: JSON.stringify(mybody), // POST puts arguments in the message body
     })
-      .then((response) => response.text()) // we are expecting a text response
+      .then((response) => response.json()) // we are expecting a text response
       .then((data) => {
-        console.log(data);
-        if (data == "false") {
+        if (data == false) {
           window.addEventListener("beforeunload", (event) => {
             document.cookie =
               "Playerdetails=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
           });
+
           onlose();
         }
       });
