@@ -322,10 +322,12 @@ app.get("/myCookie", (req, res) => {
        console.log(myCookieObj);
        res.send(myCookieObj);
      } catch (error) {
+      console.log("x")
        res.status(400).send("Invalid cookie value");
        return;
      }
    } else {
+    console.log("null")
      res.send("null");
    }
  
