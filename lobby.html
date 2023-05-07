@@ -101,8 +101,17 @@
         let allid = [];
         let splitbut = document.getElementById("split-button");
         splitbut.addEventListener("click", function(){
+            let mybody = {
+                gid : Gameid
+            }
+            return new Promise((resolve, reject) => {
+            fetch("/launchgame", { method: "POST", headers: {
+        "Content-Type": "application/json",}, // says that arguments are JSON formatted
+     body: JSON.stringify(mybody), // POST puts arguments in the message body
+    })
             window.location.href="/game"; 
-        })
+        })});
+        
    async function getmycookie(){
   return new Promise((resolve, reject) => {
         fetch("/myCookie")
@@ -144,6 +153,7 @@ console.log(getmycookie());
             yourid = y.PlayerID;
             userdetails=y;   
             });
+
             setInterval(checkifgamestarted(Gameid),1000);
 
             let y = await getusers(Gameid).then(
@@ -212,8 +222,7 @@ console.log(getmycookie());
         .then((data) => {
             resolve(data);
             if(data==true){
-                            window.location.href="/game"; 
-
+                window.location.href="/game"; 
             }
             });})
          };
