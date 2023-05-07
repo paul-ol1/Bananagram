@@ -189,6 +189,7 @@ async function startgame() {
     yourid = y.PlayerID;
   });
   await getgamestate(Gameid).then((y) => {
+    console.log(y);
     if(y=="0"){
         startstopwatch();
         sharetiles();

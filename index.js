@@ -241,6 +241,7 @@ app.post("/getgamestate", function (req, res) {
   let gameid = req.body.gid;
   let gamestate;
   async function onetime() {
+    
     await getgamestate(gameid).then((x) => {
       gamestate = "" + x[0].Ongoing;
     });
