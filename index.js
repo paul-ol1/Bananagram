@@ -196,8 +196,10 @@ app.post("/gettiles", function (req, res) {
 app.post("/allplayers", function (req, res) {
   let gameid = req.body.gid;
   async function onetime() {
-    let x = await allplayers(gameid);
-    res.send(x);
+    await allplayers(gameid).then(x=>{
+res.send(x);
+    });
+    
   }
   onetime();
 });
