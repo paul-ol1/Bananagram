@@ -108,10 +108,9 @@
         fetch("/myCookie")
         .then((response) => (response.text()))
         .then((data) =>{
+            console.log(data);
             resolve(data);
-            if(data == "Invalid cookie value"){
-                window.location="/";
-            }
+            
         })})};
 
         async function getusers(id){
