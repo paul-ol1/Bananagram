@@ -154,6 +154,7 @@ console.log(getmycookie());
             userdetails=y;   
             });
 
+            getaction(Gameid);
             /*await getgamestate(Gameid).then(
                 x=>{
                     if(x=="1"){
@@ -218,12 +219,12 @@ console.log(getmycookie());
         
 
 
-async function getgamestate(id) {
+async function getaction(id) {
   let mybody = {
     gid: id,
   };
   return new Promise((resolve, reject) => {
-    fetch("/getgamestate", {
+    fetch("/getAction", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -233,6 +234,7 @@ async function getgamestate(id) {
       .then((response) => response.json()) // we are expecting a text response
       .then((data) => {
         resolve(data);
+        
       });
   });
 }
