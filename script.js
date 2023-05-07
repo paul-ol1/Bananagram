@@ -192,12 +192,14 @@ async function startgame() {
     if(y=="0"){
         startstopwatch();
         sharetiles();
+
     }
       if(y == "1"){
         timer.style.display = "none";
         gamediv.style.display = "grid";
         resumegame();
       }
+      setInterval(winnerexist, 1000);
   });
 }
 async function resumegame() {
@@ -901,8 +903,9 @@ async function winnerexist() {
         console.log( "no winner")
     }
   });
-  
+
 }
+
 
 checktileint = setInterval(checktiles, 500);
 /*createtiles();

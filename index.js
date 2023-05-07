@@ -62,6 +62,7 @@ app.get(
   }
 );
 
+
 app.get("/game", function (req, res) {
   res.sendFile(path.join(__dirname, "game.html")); // res.sendFile sends the contents of a file
 });
@@ -75,6 +76,18 @@ app.get("/newgame", function (req, res) {
 app.get("/movetolobby", function (req, res) {
   res.sendFile(path.join(__dirname, "lobby.html"));
 });
+
+app.post("/gamewon", function (req, res) {
+  let gameid = req.body.gid;
+  async function onetime(){
+  await gameWon(gameid).then(x=>{
+      if(x[0].Winner != undefined){
+      res.send(""+x[0].Winner);}
+    })
+  }
+  onetime();
+
+  })
 app.post("/sharetiles", function (req, res) {
   let gameid = req.body.gid;
   let allusers;
@@ -583,5 +596,17 @@ function getaction(id) {
         }
       }
     );
+  });
+}
+
+function gameWon(id){
+  return new Promise((resolve, reject) => {
+    database.all(`SELECT Winner FROM Game WHERE GameID= ${id}`, (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
   });
 }
