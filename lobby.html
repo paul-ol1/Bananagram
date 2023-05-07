@@ -141,7 +141,6 @@ console.log(getmycookie());
             let x = await getmycookie().then(y=>{
             Gamename = y.GameName;
             Gameid = y.GameID;
-            console.log(Gameid)
             yourid = y.PlayerID;
             userdetails=y;   
             });
@@ -219,7 +218,7 @@ console.log(getmycookie());
             });})
          };
 
-        //tinterval = setInterval(designlobby,1000);
+        tinterval = setInterval(designlobby,1000);
         
     </script>
 </body>
