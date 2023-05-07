@@ -192,17 +192,6 @@ async function startgame() {
     console.log(y);
     if(y=="0"){
         startstopwatch();
-        let mybody = {
-          gid: Gameid,
-        };
-        fetch("/launchgame", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          }, // says that arguments are JSON formatted
-          body: JSON.stringify(mybody), // POST puts arguments in the message body
-        });
-        
         sharetiles();
         setInterval(winnerexist, 1000);
 
@@ -214,6 +203,9 @@ async function startgame() {
         setInterval(winnerexist, 1000);
       }
       
+  });
+  await getgamestate(Gameid).then((y) => {
+    console.log(y);
   });
 }
 async function resumegame() {
@@ -258,7 +250,11 @@ function startstopwatch() {
         "Content-Type": "application/json",
       }, // says that arguments are JSON formatted
       body: JSON.stringify(mybody), // POST puts arguments in the message body
-    });
+    })
+      .then((response) => response.text()) // we are expecting a text response
+      .then((data) => {
+        console.log(data);
+      });
     location.reload();
   }, start + 1000);
 }
