@@ -288,6 +288,7 @@ app.post("/bananas", function (req, res) {
   let gameid = req.body.gid;
   let playerid = req.body.pid;
   let allcorrect = true;
+  console.log("userwords");
   userwords.forEach((x) => {
     if (!englishwords.includes(x)) {
       allcorrect = false;
