@@ -193,14 +193,23 @@ async function startgame() {
     if(y=="0"){
         startstopwatch();
         sharetiles();
-        setInterval(winnerexist, 1000);
+        fetch("/launchgame", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          }, // says that arguments are JSON formatted
+          body: JSON.stringify(mybody), // POST puts arguments in the message body
+        })
+          .then((response) => response.text()) // we are expecting a text response
+          .then((data) => {
+            console.log(data);
+          });
 
     }
       if(y == "1"){
         timer.style.display = "none";
         gamediv.style.display = "grid";
         resumegame();
-        setInterval(winnerexist, 1000);
       }
       
   });
@@ -244,17 +253,7 @@ function startstopwatch() {
     let mybody = {
       gid: Gameid,
     };
-    fetch("/launchgame", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      }, // says that arguments are JSON formatted
-      body: JSON.stringify(mybody), // POST puts arguments in the message body
-    })
-      .then((response) => response.text()) // we are expecting a text response
-      .then((data) => {
-        console.log(data);
-      });
+    
     location.reload();
   }, start + 1000);
 }
