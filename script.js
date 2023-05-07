@@ -813,6 +813,7 @@ async function bananas() {
     })
       .then((response) => response.json()) // we are expecting a text response
       .then((data) => {
+        console.log(data);
         if (data == false) {
           window.addEventListener("beforeunload", (event) => {
             document.cookie =
