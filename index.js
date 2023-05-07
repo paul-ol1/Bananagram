@@ -402,7 +402,7 @@ async function getgamestate(id) {
 }
 async function createnewgame(gt, gn) {
   database.run(
-    `INSERT INTO Game(GameTiles, Ongoing, GameName) VALUES('${gt}', 0, '${gn}')`
+    `INSERT INTO Game(GameTiles, Ongoing, GameName,Action) VALUES('${gt}', 0, '${gn}','')`
   );
   return new Promise((resolve, reject) => {
     database.all(
