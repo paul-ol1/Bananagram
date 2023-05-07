@@ -190,13 +190,13 @@ async function startgame() {
   });
   await getgamestate(Gameid).then((y) => {
     console.log(y);
-    if(y==0){
+    if(y=="0"){
         startstopwatch();
         sharetiles();
         setInterval(winnerexist, 1000);
 
     }
-      if(y == 1){
+      if(y == "1"){
         timer.style.display = "none";
         gamediv.style.display = "grid";
         resumegame();
@@ -237,6 +237,7 @@ function startstopwatch() {
       usertiles = x;
       createtiles(x);
     });
+
     let mybody = {
       gid: Gameid,
     };
