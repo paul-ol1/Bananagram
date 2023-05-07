@@ -234,7 +234,7 @@ async function getaction(id) {
       }, // says that arguments are JSON formatted
       body: JSON.stringify(mybody), // POST puts arguments in the message body
     })
-      .then((response) => response.json()) // we are expecting a text response
+      .then((response) => response.text()) // we are expecting a text response
       .then((data) => {
         resolve(data);
 
