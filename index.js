@@ -283,19 +283,12 @@ app.post("/joingamelobby", function (req, res) {
 
   onetime();
 });
-
-
-app.post("/userattempt", function (req, res) {
-  console.log(req.body);
-});
-
-app.post("/banana", function (req, res) {
-  console.log(req.body);
+app.post("/bananas", function (req, res) {
   let userwords = req.body.words;
   let gameid = req.body.gid;
   let playerid = req.body.pid;
   let allcorrect = true;
-  console.log("userwords");
+  console.log(allcorrect);
   userwords.forEach((x) => {
     if (!englishwords.includes(x)) {
       allcorrect = false;

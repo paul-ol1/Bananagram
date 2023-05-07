@@ -788,7 +788,7 @@ function checkSubset(needle, haystack) {
   return true;
 }
 
-async function bananas() {
+function bananas() {
   if (checktilesallignment()) {
     let w = getallwords();
     let userwords = [];
@@ -803,16 +803,8 @@ async function bananas() {
       words: userwords,
       pid: yourid,
     };
-    fetch("/userattempt", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      }, // says that arguments are JSON formatted
-      body: JSON.stringify(mybody), // POST puts arguments in the message body
-    });
 
-    /*
-    fetch("/banana", {
+    fetch("/bananas", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -821,7 +813,6 @@ async function bananas() {
     })
       .then((response) => response.json()) // we are expecting a text response
       .then((data) => {
-        console.log(data);
         if (data == false) {
           window.addEventListener("beforeunload", (event) => {
             document.cookie =
@@ -830,9 +821,8 @@ async function bananas() {
 
           onlose();
         }
-      });*/
-  } 
-  else {
+      });
+  } else {
     alert("tiles are not connected or/and there are still tiles in hand");
   }
 }
