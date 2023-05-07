@@ -319,6 +319,7 @@ app.get("/myCookie", (req, res) => {
    if (myCookieValue != undefined) {
      try {
        myCookieObj = JSON.parse(myCookieValue);
+       console.log(myCookieObj);
        res.send(myCookieObj);
      } catch (error) {
        res.status(400).send("Invalid cookie value");
