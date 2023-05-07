@@ -154,13 +154,13 @@ console.log(getmycookie());
             userdetails=y;   
             });
 
-            await getgamestate(Gameid).then(
+            /*await getgamestate(Gameid).then(
                 x=>{
                     if(x=="1"){
                          window.location.href="/game"; 
                     }
                 }
-            )
+            )*/
 
             let y = await getusers(Gameid).then(
                 x=>{
