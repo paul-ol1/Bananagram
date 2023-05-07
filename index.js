@@ -168,6 +168,7 @@ app.post("/getgamestarted", function (req, res) {
   let gameid = req.body.gid;
   async function onetime() {
     await checkgamestarted(gameid).then((x) => {
+      console.log(x[0].Ongoing);
       if (x[0].Ongoing == 0) {
         res.send("false");
       } else {
