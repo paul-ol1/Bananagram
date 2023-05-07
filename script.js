@@ -879,6 +879,23 @@ async function onquit() {
    window.location = "/";
 }
 
+async function winnerexist() {
+  document.cookie =
+    "Playerdetails=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+  let mybody = {
+    gid: Gameid,
+  };
+
+  fetch("/removeplayer", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    }, // says that arguments are JSON formatted
+    body: JSON.stringify(mybody), // POST puts arguments in the message body
+  });
+
+  window.location = "/";
+}
 
 checktileint = setInterval(checktiles, 500);
 /*createtiles();
