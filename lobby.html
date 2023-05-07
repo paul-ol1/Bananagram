@@ -141,6 +141,7 @@ console.log(getmycookie());
             let x = await getmycookie().then(y=>{
             Gamename = y.GameName;
             Gameid = y.GameID;
+            console.log(Gameid)
             yourid = y.PlayerID;
             userdetails=y;   
             });
