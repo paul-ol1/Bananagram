@@ -200,7 +200,20 @@ app.post("/allplayers", function (req, res) {
   }
   onetime();
 });
+app.post("/split", function (req, res) {
+  let gameid = req.body.gid;
+  database.run(` UPDATE Game SET Action= "split" WHERE GameID= ${gameid}`);
+  })
 
+  app.post("/getAction", function (req, res) {
+    let gameid = req.body.gid;
+    async function onetime() {
+    await getaction(gameid).then(x=>{
+      res.send(x[0].Action);
+    })
+  }
+  onetime();
+  });
 app.post("/getgamestate", function (req, res) {
   let gameid = req.body.gid;
   let gamestate;
@@ -541,6 +554,21 @@ function checkgamestarted(id) {
   return new Promise((resolve, reject) => {
     database.all(
       `SELECT Ongoing FROM Game WHERE GameID= ${id}`,
+      (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      }
+    );
+  });
+}
+
+function getaction(id) {
+  return new Promise((resolve, reject) => {
+    database.all(
+      `SELECT Action FROM Game WHERE GameID= ${id}`,
       (err, rows) => {
         if (err) {
           reject(err);

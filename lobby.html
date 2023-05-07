@@ -105,7 +105,7 @@
                 gid : Gameid
             }
             return new Promise((resolve, reject) => {
-            fetch("/launchgame", { method: "POST", headers: {
+            fetch("/split", { method: "POST", headers: {
         "Content-Type": "application/json",}, // says that arguments are JSON formatted
      body: JSON.stringify(mybody), // POST puts arguments in the message body
     })

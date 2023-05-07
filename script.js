@@ -189,9 +189,15 @@ async function startgame() {
     yourid = y.PlayerID;
   });
   await getgamestate(Gameid).then((y) => {
-      startstopwatch();
-      sharetiles();
-    
+    if(y=="0"){
+        startstopwatch();
+        sharetiles();
+    }
+      if(y == "1"){
+        timer.style.display = "none";
+        gamediv.style.display = "grid";
+        resumegame();
+      }
   });
 }
 async function resumegame() {
