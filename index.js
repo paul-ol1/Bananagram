@@ -131,7 +131,6 @@ app.post("/peel", function (req, res) {
   onetime();
 });
 app.post("/droptile", function (req, res) {
-  
   let gameid = req.body.gid;
   let gametile = req.body.tilecontent;
   let userid = req.body.pid;
@@ -147,7 +146,7 @@ app.post("/droptile", function (req, res) {
 
     await yourtiles(userid).then((y) => {
       usertiles = y[0].PlayerTiles.split("");
-      usertiles.splice(usertiles.indexOf(gametile),1);
+      usertiles.splice(usertiles.indexOf(gametile), 1);
       newtiles.forEach((x) => {
         usertiles.push(x);
       });
@@ -162,24 +161,19 @@ app.post("/droptile", function (req, res) {
       );
       res.send(newtiles);
     });
-
   }
   onetime();
 });
 app.post("/getgamestarted", function (req, res) {
   let gameid = req.body.gid;
   async function onetime() {
-    await checkgamestarted(gameid).then(
-      x=>{
-        if(x[0].Ongoing == 0){
-          res.send("false");
-        }
-        else{
-          res.send("true");  
-        }
+    await checkgamestarted(gameid).then((x) => {
+      if (x[0].Ongoing == 0) {
+        res.send("false");
+      } else {
+        res.send("true");
       }
-    );
-    
+    });
   }
   onetime();
 });
@@ -196,10 +190,19 @@ app.post("/gettiles", function (req, res) {
 app.post("/allplayers", function (req, res) {
   let gameid = req.body.gid;
   async function onetime() {
-    await allplayers(gameid).then(x=>{
-res.send(x);
+    let x = await allplayers(gameid);
+    res.send(x);
+  }
+  onetime();
+});
+app.post("/getgamestate", function (req, res) {
+  let gameid = req.body.gid;
+  let gamestate;
+  async function onetime() {
+    await getgamestate(gameid).then((x) => {
+      gamestate = "" + x[0].Ongoing;
     });
-    
+    res.send(gamestate);
   }
   onetime();
 });
@@ -236,30 +239,30 @@ app.post("/bananas", function (req, res) {
   let gameid = req.body.gid;
   let playerid = req.body.pid;
   let allcorrect = true;
-  userwords.forEach(x=>{
-    if(!englishwords.includes(x)){
+  userwords.forEach((x) => {
+    if (!englishwords.includes(x)) {
       allcorrect = false;
-      
     }
-  })
-  if(allcorrect){
-  database.run(`UPDATE Game SET Ongoing= 2 WHERE GameID= ${gameid}`);
-  database.run(` UPDATE Game SET Winner = ${playerid} WHERE GameID= ${gameid}`);
-  res.send("true");}
-
-  else{
+  });
+  if (allcorrect) {
+    database.run(`UPDATE Game SET Ongoing= 2 WHERE GameID= ${gameid}`);
+    database.run(
+      ` UPDATE Game SET Winner = ${playerid} WHERE GameID= ${gameid}`
+    );
+    res.send("true");
+  } else {
     async function onetime() {
       let playertiles;
       let alltiles;
-      await yourtiles(playerid).then( x=>{
-        playertiles =x[0].PlayerTiles;
+      await yourtiles(playerid).then((x) => {
+        playertiles = x[0].PlayerTiles;
       });
 
-      await getalltiles(gameid).then( x=>{
+      await getalltiles(gameid).then((x) => {
         alltiles = x[0].GameTiles;
-      })
+      });
       alltiles = alltiles + playertiles;
-      returntiles(alltiles,gameid);
+      returntiles(alltiles, gameid);
       database.run(
         ` UPDATE Players SET PlayerTiles= '' WHERE PlayerID= ${playerid}`
       );
@@ -268,7 +271,6 @@ app.post("/bananas", function (req, res) {
 
     onetime();
   }
-
 });
 
 app.post("/removeplayer", function (req, res) {
@@ -316,7 +318,7 @@ app.get("/myCookie", (req, res) => {
   try {
     myCookieObj = JSON.parse(myCookieValue);
   } catch (error) {
-    res.status(400).send(["Invalid cookie value"]);
+    res.status(400).send("Invalid cookie value");
     return;
   }
   res.send(myCookieObj);
@@ -334,7 +336,6 @@ app.get("/myCookie", (req, res) => {
       });
     }, 10);
   }
-
   setTimeout((x) => {
     
     res.sendFile(path.join(__dirname, "lobby.html"));
@@ -528,7 +529,7 @@ function yourtiles(id) {
   });
 }
 
-function checkgamestarted(id){
+function checkgamestarted(id) {
   return new Promise((resolve, reject) => {
     database.all(
       `SELECT Ongoing FROM Game WHERE GameID= ${id}`,

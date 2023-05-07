@@ -109,7 +109,7 @@
         .then((response) => (response.json()))
         .then((data) =>{
             resolve(data);
-            if(data == ["Invalid cookie value"]){
+            if(data == "Invalid cookie value"){
                 window.location="/";
             }
         })})};
@@ -137,8 +137,8 @@
             yourid = y.PlayerID;
             userdetails=y;   
             });
-            //setInterval(checkifgamestarted(Gameid),1000);
-            console.log(Gameid)
+            setInterval(checkifgamestarted(Gameid),1000);
+
             let y = await getusers(Gameid).then(
                 x=>{
                     
@@ -192,7 +192,6 @@
             });})
             });
         }
-        /*
          function checkifgamestarted(id){
         let mybody = {
                 gid : id
@@ -210,7 +209,7 @@
 
             }
             });})
-         };*/
+         };
         tinterval = setInterval(designlobby,1000);
         
     </script>
