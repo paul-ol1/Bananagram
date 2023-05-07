@@ -812,12 +812,12 @@ function bananas() {
     })
       .then((response) => response.json()) // we are expecting a text response
       .then((data) => {
+        console.log(data);
         if (data == false) {
           window.addEventListener("beforeunload", (event) => {
             document.cookie =
               "Playerdetails=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
           });
-
           onlose();
         }
       });
