@@ -314,7 +314,13 @@ app.get("/allgames", function (req, res) {
 
 app.get("/myCookie", (req, res) => {
   const myCookieValue = req.cookies.Playerdetails;
-  res.send({details:JSON.parse(myCookieValue)});
+  if(myCookieValue!=undefined){
+     res.send({ details: JSON.parse(myCookieValue) });
+  }
+  else{
+    res.send("null");
+  }
+ 
 });
 /*
     setTimeout((x) => {
