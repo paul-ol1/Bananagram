@@ -790,6 +790,7 @@ function checkSubset(needle, haystack) {
 
 function bananas() {
   if (checktilesallignment()) {
+    console.log(aligned)
     let w = getallwords();
     let userwords = [];
     w.forEach((x) => {
@@ -803,6 +804,8 @@ function bananas() {
       pid: yourid,
     };
 
+    console.log(mybody);
+    
     fetch("/bananas", {
       method: "POST",
       headers: {
