@@ -154,7 +154,7 @@ console.log(getmycookie());
             userdetails=y;   
             });
 
-            setInterval(checkifgamestarted(Gameid),1000);
+            checkifgamestarted(Gameid);
 
             let y = await getusers(Gameid).then(
                 x=>{
@@ -221,6 +221,7 @@ console.log(getmycookie());
       .then((response) => response.json()) // we are expecting a text response
         .then((data) => {
             resolve(data);
+            console.log(data);
             if(data=="true"){
                 window.location.href="/game"; 
             }
