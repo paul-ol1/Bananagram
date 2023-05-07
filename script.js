@@ -189,15 +189,9 @@ async function startgame() {
     yourid = y.PlayerID;
   });
   await getgamestate(Gameid).then((y) => {
-    if (y == 1) {
-      timer.style.display = "none";
-      gamediv.style.display = "grid";
-      resumegame();
-    }
-    if (y == 0) {
       startstopwatch();
       sharetiles();
-    }
+    
   });
 }
 async function resumegame() {
@@ -207,6 +201,7 @@ async function resumegame() {
   await getmycookie().then((y) => {
     Gameid = y.GameID;
     yourid = y.PlayerID;
+
     mybody = {
       gid: Gameid,
       pid: yourid,

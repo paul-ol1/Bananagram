@@ -180,10 +180,14 @@ app.post("/getgamestarted", function (req, res) {
 });
 app.post("/gettiles", function (req, res) {
   let userid = req.body.pid;
+  console.log(userid);
+  
   async function onetime() {
-    let x = await yourtiles(userid);
-    x = x[0].PlayerTiles.split("");
-    res.send(x);
+    await yourtiles(userid).then( x=>{
+      x= x[0].PlayerTiles.split("");
+      res.send(x);
+    });
+
   }
   onetime();
 });
@@ -196,6 +200,7 @@ app.post("/allplayers", function (req, res) {
   }
   onetime();
 });
+
 app.post("/getgamestate", function (req, res) {
   let gameid = req.body.gid;
   let gamestate;
@@ -207,6 +212,7 @@ app.post("/getgamestate", function (req, res) {
   }
   onetime();
 });
+
 app.post("/launchgame", function (req, res) {
   let gameid = req.body.gid;
   database.run(` UPDATE Game SET Ongoing= 1 WHERE GameID= ${gameid}`);

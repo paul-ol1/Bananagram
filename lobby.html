@@ -147,14 +147,20 @@ console.log(getmycookie());
         
         async function designlobby(){
             allid = [];
-            let x = await getmycookie().then(y=>{
+             await getmycookie().then(y=>{
             Gamename = y.GameName;
             Gameid = y.GameID;
             yourid = y.PlayerID;
             userdetails=y;   
             });
 
-            checkifgamestarted(Gameid);
+            await getgamestate(Gameid).then(
+                x=>{
+                    if(x=="1"){
+                         window.location.href="/game"; 
+                    }
+                }
+            )
 
             let y = await getusers(Gameid).then(
                 x=>{
@@ -209,24 +215,27 @@ console.log(getmycookie());
             });})
             });
         }
-         function checkifgamestarted(id){
-        let mybody = {
-                gid : id
-            }
-            return new Promise((resolve, reject) => {
-            fetch("/getgamestarted", { method: "POST", headers: {
-        "Content-Type": "application/json",}, // says that arguments are JSON formatted
-     body: JSON.stringify(mybody), // POST puts arguments in the message body
+        
+
+
+async function getgamestate(id) {
+  let mybody = {
+    gid: id,
+  };
+  return new Promise((resolve, reject) => {
+    fetch("/getgamestate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }, // says that arguments are JSON formatted
+      body: JSON.stringify(mybody), // POST puts arguments in the message body
     })
       .then((response) => response.json()) // we are expecting a text response
-        .then((data) => {
-            resolve(data);
-            console.log(data);
-            if(data=="true"){
-                window.location.href="/game"; 
-            }
-            });})
-         };
+      .then((data) => {
+        resolve(data);
+      });
+  });
+}
 
         tinterval = setInterval(designlobby,1000);
         
