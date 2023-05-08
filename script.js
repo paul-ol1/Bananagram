@@ -14,7 +14,6 @@ let content = document.getElementsByClassName("space");
 let start = 11000;
 let timeint;
 let checktileint;
-let timer = document.getElementById("timer");
 let peel = document.getElementById("peel");
 let mybody;
 let tilesindex;
@@ -209,7 +208,6 @@ async function startgame() {
         });
     }
     if (y == "1") {
-      timer.style.display = "none";
       gamediv.style.display = "grid";
       resumegame();
     }
