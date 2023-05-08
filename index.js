@@ -81,8 +81,8 @@ app.post("/gamewon", function (req, res) {
   let gameid = req.body.gid;
   async function onetime(){
   await gameWon(gameid).then(x=>{
-      if(x[0].Winner != null){
-      res.send(""+x[0].Winner);}
+      
+      res.send(x[0].Winner);
     })
   }
   onetime();

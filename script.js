@@ -17,6 +17,7 @@ let checktileint;
 let peel = document.getElementById("peel");
 let mybody;
 let tilesindex;
+let onwininterval;
 function createdivs() {
   for (let x = 0; x < divsize; x++) {
     let newdiv = document.createElement("div");
@@ -214,7 +215,7 @@ async function startgame() {
     }
   });
   
-  setInterval(winnerexist, 2000);
+   onwininterval = setInterval(winnerexist, 3000);
 }
 async function resumegame() {
   alltiles = [];
@@ -926,11 +927,28 @@ async function onquit() {
   window.location.replace("/");
 }
  
-function winnerexist() {
+async function winnerexist() {
+  await checkwinner().then(
+    x=>{
+      if (x != null) {
+        clearInterval(onwininterval);
+        if (yourid == x) {
+          onwin();
+        } else {
+          onlose();
+        }
+      } else {
+        console.log("no winner yet");
+      }
+    }
+  )
+}
+
+function checkwinner(){
   let mybody = {
     gid: Gameid,
   };
-
+  return new Promise((resolve, reject) => {
   fetch("/gamewon", {
     method: "POST",
     headers: {
@@ -940,21 +958,10 @@ function winnerexist() {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
-      if (data != null) {
-        clearInterval(onwininterval);
-        onwininterval = null;
-        if (yourid == data) {
-          onwin();
-        } else {
-          onlose();
-        }
-      } else {
-        console.log("no winner yet");
-      }
+      resolve(data);
     });
+})
 }
-
 checktileint = setInterval(checktiles, 500);
 /*createtiles();
 createdivs();
