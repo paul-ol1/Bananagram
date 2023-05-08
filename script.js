@@ -159,7 +159,11 @@ async function getmycookie() {
     fetch("/myCookie")
       .then((response) => response.json())
       .then((data) => {
+        if(data == "null"){
+          window.location.replace("/");
+        }
         resolve(data);
+
       });
   });
 }
