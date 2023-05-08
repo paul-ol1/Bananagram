@@ -191,7 +191,7 @@ async function startgame() {
   await getgamestate(Gameid).then((y) => {
     console.log(y);
     if (y == "0") {
-      startstopwatch();
+      begin();
       sharetiles();
       let mybody = {
         gid: Gameid,
@@ -238,11 +238,8 @@ async function resumegame() {
   });
 }
 
-function startstopwatch() {
-  timeint = setInterval(elapse, 1000);
+function begin() {
   setTimeout(async function () {
-    clearInterval(timeint);
-    timer.style.display = "none";
     gamediv.style.display = "grid";
     createdivs();
     gridmaker();
@@ -256,19 +253,9 @@ function startstopwatch() {
     };
 
     location.reload();
-  }, start + 1000);
+  },1000);
 }
-function elapse() {
-  start = start - 1000;
-  convertmillisec(start);
-}
-function convertmillisec(elem) {
-  let minutes = Math.floor(elem / 60000);
-  let seconds = ((elem % 60000) / 1000).toFixed(0);
-  let time = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-  timer.innerHTML = "";
-  timer.textContent = time;
-}
+
 function sharetiles() {
   let mybody = {
     gid: Gameid,
