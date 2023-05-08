@@ -189,7 +189,6 @@ async function startgame() {
     yourid = y.PlayerID;
   });
   await getgamestate(Gameid).then((y) => {
-    console.log(y);
     if (y == "0") {
       begin();
       sharetiles();
@@ -205,7 +204,6 @@ async function startgame() {
       })
         .then((response) => response.text()) // we are expecting a text response
         .then((data) => {
-          console.log(data);
         });
     }
     if (y == "1") {
@@ -907,6 +905,10 @@ function onlose() {
 
   // Add the div to the document
   document.body.appendChild(loseDiv);
+
+  if (window.performance.getEntriesByType("navigation")[0].type == "reload") {
+    onquit();
+  } 
 }
 
 async function onquit() {
@@ -930,7 +932,6 @@ async function onquit() {
 async function winnerexist() {
   await checkwinner().then(
     x=>{
-      console.log(x);
       if (x != "") {
         clearInterval(onwininterval);
         if (yourid == x) {
