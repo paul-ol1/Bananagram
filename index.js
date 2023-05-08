@@ -413,7 +413,6 @@ function createtiles() {
       alltiles.push(repartation[x].letter);
     }
   }
-  console.log("createtiles:" + alltiles.length);
   alltiles = alltiles.sort((a, b) => 0.5 - Math.random());
   return alltiles.join("");
 }
