@@ -930,7 +930,8 @@ async function onquit() {
 async function winnerexist() {
   await checkwinner().then(
     x=>{
-      if (x != "null") {
+      console.log(x);
+      /*if (x != "null") {
         clearInterval(onwininterval);
         if (yourid == x) {
           onwin();
@@ -939,7 +940,7 @@ async function winnerexist() {
         }
       } else {
         console.log("no winner yet");
-      }
+      }*/
     }
   )
 }
