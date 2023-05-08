@@ -955,6 +955,7 @@ async function winnerexist() {
   })
     .then((response) => response.json())
     .then((data) => {
+      console.log(data);
       if (data != null) {
         clearInterval(onwininterval);
         onwininterval = null;
@@ -968,7 +969,7 @@ async function winnerexist() {
     });
 }
 
-//onwininterval = setInterval(winnerexist, 2000);
+onwininterval = setInterval(winnerexist, 2000);
 checktileint = setInterval(checktiles, 500);
 /*createtiles();
 createdivs();
