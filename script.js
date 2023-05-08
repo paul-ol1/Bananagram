@@ -930,7 +930,7 @@ async function onquit() {
 async function winnerexist() {
   await checkwinner().then(
     x=>{
-      if (x != null) {
+      if (x != "null") {
         clearInterval(onwininterval);
         if (yourid == x) {
           onwin();
