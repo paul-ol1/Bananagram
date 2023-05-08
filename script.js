@@ -368,14 +368,26 @@ async function checktiles() {
   remainingtiles = [];
 }
 
-function peelfunc() {
-  fetch("/peel", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    }, // says that arguments are JSON formatted
-    body: JSON.stringify(mybody), // POST puts arguments in the message body
+async function peelfunc() {
+  await attemptpeel().then(x=>{
+    console.log(x);
   });
+}
+
+async function attemptpeel(){
+return new Promise((resolve, reject) => {  fetch("/peel", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  }, // says that arguments are JSON formatted
+  body: JSON.stringify(mybody), // POST puts arguments in the message body
+})
+  .then((response) => response.text()) // we are expecting a text response
+  .then((data) => {
+    resolve(data);
+  });
+
+})
 }
 function getallwords() {
   tilesindex = tilesindex.sort((a, b) => a - b);
@@ -855,6 +867,8 @@ function onwin() {
 
   // Add the div to the document
   document.body.appendChild(windiv);
+  document.cookie =
+    "Playerdetails=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
 }
 function onlose() {
   gamediv.style.display = "none";
@@ -905,10 +919,8 @@ function onlose() {
 
   // Add the div to the document
   document.body.appendChild(loseDiv);
-
-  if (window.performance.getEntriesByType("navigation")[0].type == "reload") {
-    onquit();
-  } 
+  document.cookie =
+    "Playerdetails=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
 }
 
 async function onquit() {
@@ -934,6 +946,7 @@ async function winnerexist() {
     x=>{
       if (x != "") {
         clearInterval(onwininterval);
+
         if (yourid == x) {
           onwin();
         } else {
