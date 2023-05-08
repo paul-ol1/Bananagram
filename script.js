@@ -969,7 +969,6 @@ async function winnerexist() {
     });
 }
 
-onwininterval = setInterval(winnerexist, 2000);
 checktileint = setInterval(checktiles, 500);
 /*createtiles();
 createdivs();
