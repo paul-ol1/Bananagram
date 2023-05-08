@@ -210,11 +210,11 @@ async function startgame() {
     if (y == "1") {
       gamediv.style.display = "grid";
       resumegame();
+
     }
   });
-  await getgamestate(Gameid).then((y) => {
-    console.log(y);
-  });
+  
+  setInterval(winnerexist, 2000);
 }
 async function resumegame() {
   alltiles = [];
@@ -925,8 +925,8 @@ async function onquit() {
 
   window.location.replace("/");
 }
-
-async function winnerexist() {
+ 
+function winnerexist() {
   let mybody = {
     gid: Gameid,
   };
