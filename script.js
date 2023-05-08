@@ -950,6 +950,7 @@ function winnerexist() {
           onlose();
         }
       } else {
+        console.log("no winner yet");
       }
     });
 }
