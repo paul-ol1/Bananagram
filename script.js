@@ -167,6 +167,22 @@ async function getmycookie() {
       });
   });
 }
+async function getmycookiebegingame() {
+  return new Promise((resolve, reject) => {
+    fetch("/myCookie")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data == "null") {
+          window.location.replace("/");
+        }
+        else{
+          startgame();
+          checktileint = setInterval(checktiles, 500);
+        }
+      });
+  });
+}
+
 
 async function getusers(id) {
   let mybody = {
@@ -949,11 +965,10 @@ function checkwinner(){
     });
 })
 }
-getmycookie();
-checktileint = setInterval(checktiles, 500);
+getmycookiebegingame();
+
 /*createtiles();
 createdivs();
 gridmaker();
 generatetiles();*/
 
-startgame();
