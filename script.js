@@ -956,7 +956,7 @@ function checkwinner(){
     }, // says that arguments are JSON formatted
     body: JSON.stringify(mybody), // POST puts arguments in the message body
   })
-    .then((response) => response.json())
+    .then((response) => response.text())
     .then((data) => {
       resolve(data);
     });
