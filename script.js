@@ -173,7 +173,7 @@ async function getmycookiebegingame() {
       .then((response) => response.json())
       .then((data) => {
         
-        if (data == "null") {
+        if (data == null) {
           window.location.replace("/");
         }
         else{
