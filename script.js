@@ -844,31 +844,15 @@ function onwin() {
   homeButton.style.width = "300px";
   homeButton.style.color = "white";
 
-  homeButton.addEventListener("click", function () {
-    document.cookie =
-      "Playerdetails=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
-    let mybody = {
-      PlayerID: yourid,
-    };
-
-    fetch("/removeplayer", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      }, // says that arguments are JSON formatted
-      body: JSON.stringify(mybody), // POST puts arguments in the message body
-    });
-
-    window.location.replace("/");
-  });
+  homeButton.addEventListener("click", onquit);
+    
   // Add the h1 and button elements to the div
   windiv.appendChild(winText);
   windiv.appendChild(homeButton);
 
   // Add the div to the document
   document.body.appendChild(windiv);
-  document.cookie =
-    "Playerdetails=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+  
 }
 function onlose() {
   gamediv.style.display = "none";
@@ -896,31 +880,14 @@ function onlose() {
   homeButton.style.width = "300px";
   homeButton.style.color = "white";
 
-  homeButton.addEventListener("click", function () {
-    document.cookie =
-      "Playerdetails=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
-    let mybody = {
-      PlayerID: yourid,
-    };
-
-    fetch("/removeplayer", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      }, // says that arguments are JSON formatted
-      body: JSON.stringify(mybody), // POST puts arguments in the message body
-    });
-
-    window.location.replace("/");
-  });
+  homeButton.addEventListener("click", onquit);
   // Add the h1 and button elements to the div
   loseDiv.appendChild(loseText);
   loseDiv.appendChild(homeButton);
 
   // Add the div to the document
   document.body.appendChild(loseDiv);
-  document.cookie =
-    "Playerdetails=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+  
 }
 
 async function onquit() {
