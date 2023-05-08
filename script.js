@@ -949,9 +949,11 @@ function checkwinner(){
     });
 })
 }
+getmycookie();
 checktileint = setInterval(checktiles, 500);
 /*createtiles();
 createdivs();
 gridmaker();
 generatetiles();*/
+
 startgame();
