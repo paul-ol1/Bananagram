@@ -84,51 +84,51 @@ button {
     let username ;
     let gamename ;
 
-function closePopup() {
-    username = document.getElementById("name-input").value;
-	if (username != "") {
-		document.querySelector("#namepopup-container").style.display = "none";
-        document.querySelector("#gnamepopup-container").style.display = "flex";
-        
-	}
-    
-}
-
-function closePopupb() {
-    gamename = document.getElementById("gname-input").value;
-	if (gamename != "") {
-        document.querySelector("#gnamepopup-container").style.display = "none";
-	}
-}
-
-function createnewgame(){
-	let mybody = {
-
-        playern: username,
-		gamen: gamename
-    };
-    fetch("/createng", { method: "POST", headers: {
-        "Content-Type": "application/json",}, // says that arguments are JSON formatted
-     body: JSON.stringify(mybody), // POST puts arguments in the message body
-    })
-      .then((response) => response.json()) // we are expecting a text response
-        .then((data) => {
-            console.log(data);
-			window.location.replace("/movetolobby")});
-    }
-async function getmycookie(){
-  return new Promise((resolve, reject) => {
-        fetch("/myCookie")
-        .then((response) => (response.json()))
-        .then((data) =>{
-            resolve(data);
-			console.log(data);
-            
+	// username pop up
+	function closePopup() {
+		username = document.getElementById("name-input").value;
+		if (username != "") {
+			document.querySelector("#namepopup-container").style.display = "none";
+			document.querySelector("#gnamepopup-container").style.display = "flex";
 			
-			if(data != null){
-				window.location.replace("/game");
-            }
-        })})};
+		}
+	}
+	//Game name pop-up
+	function closePopupb() {
+		gamename = document.getElementById("gname-input").value;
+		if (gamename != "") {
+			document.querySelector("#gnamepopup-container").style.display = "none";
+		}
+	}
+	//creating a new game out of the game name and username just received by sending data to back end
+	function createnewgame(){
+		let mybody = {
+
+			playern: username,
+			gamen: gamename
+		};
+		fetch("/createng", { method: "POST", headers: {
+			"Content-Type": "application/json",}, // says that arguments are JSON formatted
+		body: JSON.stringify(mybody), // POST puts arguments in the message body
+		})
+		.then((response) => response.json()) 
+			.then((data) => {
+				console.log(data);
+				window.location.replace("/movetolobby")});
+		}
+		// The game runs on cookies so if we have a cookie it means a game already exists
+	async function getmycookie(){
+		return new Promise((resolve, reject) => {
+			fetch("/myCookie")
+			.then((response) => (response.json()))
+			.then((data) =>{
+				resolve(data);
+				// if the data received from my server that sends the current cookie isn't null then user is moved to the game directly
+				if(data != null){
+					window.location.replace("/game");
+				}
+			})})};
+			
 getmycookie();
 </script>
 </html>
