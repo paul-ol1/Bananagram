@@ -1,6 +1,6 @@
 const express = require("express"); //Set up the express module
 const app = express();
-const port = 8008;
+const port = 8080;
 let repartation = [
   { letter: "A", count: 13 },
   { letter: "B", count: 3 },
