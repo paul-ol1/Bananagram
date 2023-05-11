@@ -83,13 +83,18 @@ button {
 <script>
     let username ;
     let gamename ;
-
+	let format = /^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
 	// username pop up
 	function closePopup() {
 		username = document.getElementById("name-input").value;
 		if (username != "") {
+			
+			if(username.match(format)){
+				alert(" no special characters")
+			}
+			else{
 			document.querySelector("#namepopup-container").style.display = "none";
-			document.querySelector("#gnamepopup-container").style.display = "flex";
+			document.querySelector("#gnamepopup-container").style.display = "flex";}
 			
 		}
 	}
@@ -97,7 +102,11 @@ button {
 	function closePopupb() {
 		gamename = document.getElementById("gname-input").value;
 		if (gamename != "") {
-			document.querySelector("#gnamepopup-container").style.display = "none";
+			if(gamename.match(format)){
+				alert(" no special characters")
+			}
+			else{
+			document.querySelector("#gnamepopup-container").style.display = "none";}
 		}
 	}
 	//creating a new game out of the game name and username just received by sending data to back end

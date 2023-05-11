@@ -369,16 +369,13 @@ app.post("/removeplayeringame", function (req, res) {
     //gets the player's tiles
     await yourtiles(playerid).then((x) => {
       playertiles = x[0].PlayerTiles;
-      console.log(playertiles.length);
     });
     // get the remaining tiles in the game
     await getalltiles(gameid).then((x) => {
       alltiles = x[0].GameTiles;
-      console.log(alltiles.length)
     });
     //appends the player who just lost's tiles to the bunch of tiles
     alltiles = alltiles + playertiles;
-    console.log(alltiles.length);
     // return the new remaining tiles back in the game and remove the Player's tiles from the player's db
     returntiles(alltiles, gameid);
     database.run(
