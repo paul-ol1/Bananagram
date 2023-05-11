@@ -966,7 +966,8 @@ function onlose() {
 // on quit return home and delete cookie
 async function onquit() {
   let mybody = {
-    PlayerID: yourid,
+    gid: Gameid,
+    pid: yourid,
   };
   console.log(mybody);
   fetch("/removeplayeringame", {

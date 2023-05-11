@@ -360,6 +360,9 @@ app.post("/removeplayer", function (req, res) {
 });
 
 app.post("/removeplayeringame", function (req, res) {
+  let gameid = req.body.gid;
+  let playerid = req.body.pid;
+  
   async function onetime() {
     let playertiles;
     let alltiles;
