@@ -83,12 +83,12 @@ button {
 <script>
     let username ;
     let gamename ;
-	let format = /^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
+	let format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
 	// username pop up
 	function closePopup() {
 		username = document.getElementById("name-input").value;
 		if (username != "") {
-			console.log(username.match(format));
+			console.log(format.test(username));
 			
 			if(username.match(format)){
 				console.log()
