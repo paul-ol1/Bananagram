@@ -385,7 +385,7 @@ app.post("/removeplayeringame", function (req, res) {
       ` UPDATE Players SET PlayerTiles= '' WHERE PlayerID= ${playerid}`
     );
 
-    database.run(`DELETE FROM Players WHERE PlayerID= ${req.body.playerid}`);
+    database.run(`DELETE FROM Players WHERE PlayerID= ${playerid}`);
   }
 
   onetime();
