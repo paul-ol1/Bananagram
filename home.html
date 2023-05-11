@@ -5,40 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+      body{
+        background-color: #000033;
+      }
+    </style>
 </head>
 <body>
-    <style>
-    button {
-        padding: 10px;
-        font-size: 20px;
-        background-color: yellow;
-        color: black;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-
-      body {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #000033;
-      color: yellow;
-    }
-      </style>
-
-<h1>Welcome to Bananagram Game!</h1>
-    <img src="banana.jpg" alt="A banana" width = "400px", height = "400px" >
-  
-  <p>Click the button below to either start playing or learn how to play.</p>
   <div>
-    <button onclick="location.href='game.html'">Play</button>
-    <button onclick="location.href='instructions.html'">Learn</button>
+    <button onclick=" window.location.replace('/newgame')">Start Game</button>
+    <button onclick="window.location.replace('/joingame')">Join Game</button>
 </div>
-  
 
 </body>
 </html>

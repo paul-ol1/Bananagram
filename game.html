@@ -5,9 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game</title>
-</head>
-<body>
-	<style>
+    <style>
+        #timer{
+            font-size: 16rem;
+            color: aliceblue;
+            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
 body {
 			margin: 0;
@@ -16,76 +20,93 @@ body {
 		}
 
 		#grid{
-			display: grid;
-			grid-template-rows: 100px 1fr 100px;
-            grid-template-columns: 1fr 100px;
-            grid-template-areas: 
-            "header header"
-            "code code"
-            "footer2 footer1 ";
+			display: none;
+			grid-template-rows: 1fr 150px;
+            grid-template-columns: 150px 1fr 180px;
+            grid-template-areas:    
+            "code code code"
+            "buttons tiles wormhole ";
 			background-color: #000033;
-            
-			padding: 10px;
+			
             height: 100%;
 		}
 
-		#header {
-            grid-area: header;
-            color: yellow;
-			padding: 20px;
-			text-align: center;
-			font-size: 20px;
-		}
+        button {
+        width: 130px;
+        margin-top: 10px;
+        margin-left: 10px;
+        margin-right: 15px;
+        font-size: 25px;
+        height: 40px;
+        color: aliceblue;
+        background-color: #C724B1;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
 
         #content {
-            grid-area: code;
-			
-            display: grid;
-            
+            width: 100%;
+            margin-bottom:10px ;
             /*grid-template-columns: repeat(40, 1fr);
             grid-template-rows: repeat(15, 0.5fr); */
 
-            grid-template-columns: repeat(40, 2.45vmax);
-            grid-template-rows: repeat(15, 2vmax);
+            /*grid-template-columns: repeat(40, 2.45vmax);
+            /*grid-template-rows: repeat(15, 2vmax);*/
 
         }
 
         #content > div {
-            border: 0.1px solid #8d0899;
+            border: 0.1px solid #C724B1;
         }
 
-        #wormhole {
-            grid-area: footer1;
-            text-align: end;
+        #buttons{
+            grid-area: buttons;
+            text-align: center;
             width: 100%;
             height: 100%;
             
+
+        }
+        #wormhole {
+            grid-area: wormhole;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 		}
 
         #tilespositon{
-            grid-area: footer2;
-            background-color: white;
+            grid-area: tiles;
             text-align: center;
             width: 100%;
             height: 100%;
         }
+        </style>
        
-
-	</style>
+</head>
+<body>
 
 	<div id="grid">
-		<div id="header"><h1>Bananagram</h1></div>
+		
 		<div id="content">
 
         </div>
-	
+            <div id = "buttons">
+                <div id="peeldiv" >
+                    <button id="peel" onclick="peelfunc()" > Peel</button>
+                </div>
+                <div id="bananasdiv"><button id="bananas" onclick="bananas()">Bananas</button></div>
+
+                <div id="giveupdiv" "><button id="giveup" onclick="onquit()">Give up</button></div>
+
+            </div>
             <div id="tilespositon">
-                <H1>PPPPP</H1>
-             </div>
-            <img src="wormhole.gif" alt="Bag" width = "100px", height = "100px" >
+                
+            </div>
+            <div id = "wormhole">
+                <img src="wormhole.gif" alt="Bag" width = "100px", height = "100px" >
+            </div>
         </div>  
-        
- 
 	</div>
 <script src="script.js"></script>
 </body>
