@@ -971,7 +971,7 @@ async function onquit() {
     PlayerID: yourid,
   };
 
-  fetch("/removeplayer", {
+  fetch("/removeplayeringame", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
