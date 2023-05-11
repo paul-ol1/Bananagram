@@ -965,8 +965,6 @@ function onlose() {
 }
 // on quit return home and delete cookie
 async function onquit() {
-  document.cookie =
-    "Playerdetails=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
   let mybody = {
     PlayerID: yourid,
   };
@@ -979,6 +977,8 @@ async function onquit() {
     body: JSON.stringify(mybody), // POST puts arguments in the message body
   });
 
+document.cookie =
+  "Playerdetails=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
   window.location.replace("/");
 }
 //checks if winner exists and if it is your id 

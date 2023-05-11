@@ -360,28 +360,32 @@ app.post("/removeplayer", function (req, res) {
 });
 
 app.post("/removeplayeringame", function (req, res) {
-    async function onetime() {
-      let playertiles;
-      let alltiles;
-      //gets the player's tiles
-      await yourtiles(playerid).then((x) => {
-        playertiles = x[0].PlayerTiles;
-      });
-      // get the remaining tiles in the game
-      await getalltiles(gameid).then((x) => {
-        alltiles = x[0].GameTiles;
-      });
-      //appends the player who just lost's tiles to the bunch of tiles
-      alltiles = alltiles + playertiles;
-      // return the new remaining tiles back in the game and remove the Player's tiles from the player's db
-      returntiles(alltiles, gameid);
-      database.run(
-        ` UPDATE Players SET PlayerTiles= '' WHERE PlayerID= ${playerid}`
-      );
-      database.run(`DELETE FROM Players WHERE PlayerID= ${req.body.PlayerID}`);
-    }
+  async function onetime() {
+    let playertiles;
+    let alltiles;
+    //gets the player's tiles
+    await yourtiles(playerid).then((x) => {
+      playertiles = x[0].PlayerTiles;
+      console.log(playertiles.length);
+    });
+    // get the remaining tiles in the game
+    await getalltiles(gameid).then((x) => {
+      alltiles = x[0].GameTiles;
+      console.log(alltiles.length)
+    });
+    //appends the player who just lost's tiles to the bunch of tiles
+    alltiles = alltiles + playertiles;
+    console.log(alltiles.length);
+    // return the new remaining tiles back in the game and remove the Player's tiles from the player's db
+    returntiles(alltiles, gameid);
+    database.run(
+      ` UPDATE Players SET PlayerTiles= '' WHERE PlayerID= ${playerid}`
+    );
 
-    onetime();
+    database.run(`DELETE FROM Players WHERE PlayerID= ${req.body.PlayerID}`);
+  }
+
+  onetime();
 });
 
 // creates a new game by taking in player name and game name
