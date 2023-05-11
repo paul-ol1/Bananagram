@@ -362,7 +362,7 @@ app.post("/removeplayer", function (req, res) {
 app.post("/removeplayeringame", function (req, res) {
   let gameid = req.body.gid;
   let playerid = req.body.pid;
-  
+
   async function onetime() {
     let playertiles;
     let alltiles;
@@ -385,7 +385,7 @@ app.post("/removeplayeringame", function (req, res) {
       ` UPDATE Players SET PlayerTiles= '' WHERE PlayerID= ${playerid}`
     );
 
-    database.run(`DELETE FROM Players WHERE PlayerID= ${req.body.PlayerID}`);
+    database.run(`DELETE FROM Players WHERE PlayerID= ${req.body.playerid}`);
   }
 
   onetime();
