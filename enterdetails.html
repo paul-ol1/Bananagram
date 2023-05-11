@@ -88,8 +88,10 @@ button {
 	function closePopup() {
 		username = document.getElementById("name-input").value;
 		if (username != "") {
+			console.log(username.match(format));
 			
 			if(username.match(format)){
+				console.log()
 				alert(" no special characters")
 			}
 			else{
