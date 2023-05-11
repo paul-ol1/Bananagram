@@ -128,7 +128,7 @@
             submitBtn.onclick = function() {
             let name = nameInput.value;
             // join game using the game id, name, and username
-            let format = /^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
+            let format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
             if (name.match(format)) {
                 alert("no special characters")
             }
