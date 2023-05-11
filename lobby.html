@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+
+    <style>
+        body{
+            color: white;
+        }
+        #return{
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            color: white;
+            text-align: center;
+            border-top: 1px solid white;
+        }
+        #return:hover{
+            opacity: 0.7;
+            cursor: pointer;
+        }
+		#left-div {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 30%;
+			height: 100%;
+			background-color: #242450;
+		}
+
+		#right-div {
+			position: absolute;
+            display: flex;
+			align-items: center;
+			justify-content: center;
+			top: 0;
+			right: 0;
+			width: 70%;
+			height: 100%;
+			
+		}
+        #split-button {
+		
+			align-items: center;
+			justify-content: center;
+			width: 200px;
+			height: 200px;
+			border-radius: 50%;
+			background-color: #007bff;
+			color: #fff;
+			font-size: 40px;
+			font-weight: bold;
+			text-align: center;
+			cursor: pointer;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            transition: all 2s ease-in-out;
+		}
+		
+        #split{
+            display: flex;
+			align-items: center;
+			justify-content: center;
+            text-align: center;
+            
+        }
+
+        #split-button:hover{
+            width : 250px;
+            height :250px;
+
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+
+		<div id="left-div">
+			<div id="un"></div>
+            <div id="return" onclick="onquit()">
+                <h3> Return home</h3>
+            </div>
+		</div>
+        <div id="right-div">
+            <div id= "split">
+                <button id="split-button" hidden>SPLIT</button>
+            </div>
+		</div>
+	</div>
+    <script>
+        let tinterval;
+        let usernames = document.getElementById("un");
+        let Gamename;
+        let Gameid;
+        let userdetails;
+        let yourid;
+        let allid = [];
+        let splitbut = document.getElementById("split-button");
+        //split and go to the game on split and update the game action in backend
+        splitbut.addEventListener("click", function(){
+            let mybody = {
+                gid : Gameid
+            }
+            return new Promise((resolve, reject) => {
+            fetch("/split", { method: "POST", headers: {
+        "Content-Type": "application/json",}, // says that arguments are JSON formatted
+     body: JSON.stringify(mybody), // POST puts arguments in the message body
+    })
+    
+            window.location.replace("/game"); 
+        })});
+
+        // get user cookie to help set up game
+   async function getmycookie(){
+  return new Promise((resolve, reject) => {
+        fetch("/myCookie")
+        .then((response) => (response.json()))
+        .then((data) =>{
+            resolve(data);
+            /*
+            resolve(data);
+            if(data == "Invalid cookie value"){
+            }
+			else{
+				window.location.href="/game"; 
+			}*/
+        })})};
+
+
+        // get all users in a game using the current gameid
+        async function getusers(id){
+            let mybody = {
+                gid : id
+            }
+            return new Promise((resolve, reject) => {
+            fetch("/allplayers", { method: "POST", headers: {
+        "Content-Type": "application/json",}, // says that arguments are JSON formatted
+     body: JSON.stringify(mybody), // POST puts arguments in the message body
+    })
+      .then((response) => response.json()) // we are expecting a text response
+        .then((data) => {
+            resolve( data);
+            });})
+        }
+        
+        async function designlobby(){
+            allid = [];
+            // get cookie 
+            await getmycookie().then(y=>{
+            Gamename = y.GameName;
+            Gameid = y.GameID;
+            yourid = y.PlayerID;
+            userdetails=y;   
+            });
+            //check if game has been split for the users without a split button so they can be moved to the game if it has been
+            getaction(Gameid).then(x=>{
+                if(x== "split"){
+                    window.location.replace("/game"); 
+                }
+            });
+            /*await getgamestate(Gameid).then(
+                x=>{
+                    if(x=="1"){
+                         window.location.href="/game"; 
+                    }
+                }
+            )*/
+            // if the game hasn't been split just update all current players in game section and update the lobby
+            let y = await getusers(Gameid).then(
+                x=>{
+                    
+                    usernames.innerHTML="";
+                    for(let i =0; i<x.length;i++){
+                        let usernameslot = document.createElement('div');
+                        usernameslot.style.width = "100%";
+                        usernameslot.style.height = "30px";
+                        usernameslot.style.textAlign = "center";
+                        usernameslot.style.borderBottom= "1px solid white"
+                        let username = document.createElement('h3');
+                        username.style.color = "white";
+                        allid.push(x[i].PlayerID);
+                        
+                        if(yourid == x[i].PlayerID){
+                            username.textContent = "You";
+                        }
+                        else{
+                            username.textContent = x[i].PlayerName;
+                        }
+                        usernameslot.append(username);
+                        usernames.appendChild(usernameslot);
+                    }
+                    allid.sort((a, b) => a - b);
+                    // checks if for the oldest user in the game, the oldest is the game admin?(not sure if it's the word), but only the game admin has the split button
+                    if(yourid == allid[0]){
+                        splitbut.hidden = false;
+                    }
+                    else{
+                        splitbut.hidden = true;
+                    }
+                }
+            ) ;
+            
+        }
+        // when the user choses to leave
+        async function onquit(){
+            let x = await getmycookie().then(y=>{
+            yourid = y.PlayerID;
+            let mybody = {
+                PlayerID : yourid
+            }
+            // delete the player from the database
+            return new Promise((resolve, reject) => {
+            fetch("/removeplayer", { method: "POST", headers: {
+        "Content-Type": "application/json",}, body: JSON.stringify(mybody)});
+        // deletes user cookie
+            document.cookie = "Playerdetails=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            // returns user home
+            window.location.replace("/"); 
+            });
+            });
+        }
+        
+
+
+async function getaction(id) {
+  let mybody = {
+    gid: id,
+  };
+  return new Promise((resolve, reject) => {
+    fetch("/getAction", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }, // says that arguments are JSON formatted
+      body: JSON.stringify(mybody), // POST puts arguments in the message body
+    })
+      .then((response) => response.text()) // we are expecting a text response
+      .then((data) => {
+        resolve(data);
+
+      });
+  });
+}       // run design lobby
+        designlobby();
+        // run an interval for changes to the lobby or to know if the game was split each sec
+        tinterval = setInterval(designlobby,1000);
+        
+    </script>
+</body>
+</html>

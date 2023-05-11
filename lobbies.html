@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        
+
+        img {
+            position: fixed;
+            top: 0;
+            left: 0;
+            margin: 10px;
+}
+
+    </style>
+</head>
+<body>
+    <div id="return">
+        <a href="/"><img src="/return.png " alt="return" style="width: 50px;height: 50px;"></a>
+  
+</div>
+    <div class="" id="content">
+
+    </div>
+</body>
+<script>
+    let interval;
+    let alllobies;
+    let content = document.getElementById("content");
+
+    async function getlobbies(){
+        // get all games that haven't started
+        return new Promise((resolve, reject) => {
+        fetch("/allgames")
+        .then((response) => (response.json()))
+        .then((data) =>{
+        resolve(data);
+        })
+  });
+
+        
+    }
+
+    async function createlobbies(){
+        content.innerHTML="";
+        // check if a cookie exists first before doing anything
+        await getmycookie();
+        // then you get all game
+        await getlobbies().then((y) => {
+            // for each game create a game lobby div
+            for(let x = 0; x< y.length; x++){
+            let lobby = document.createElement("div");
+            lobby.style.width="250px";
+            lobby.style.height="50px";
+            lobby.style.backgroundColor="#007bff";
+            lobby.style.color="white";
+            lobby.className="lobby";
+            lobby.id=""+ y[x].GID; // make the id of the lobby it's id we just got
+            lobby.style.margin="10px";
+            lobby.style.borderRadius="5px"
+            lobby.style.display= "flex";
+            lobby.style.opacity = "0.8";
+            let gamename = document.createElement('p');
+
+            gamename.textContent= y[x].GNAME; // the lobby name
+            gamename.style.textAlign="center";
+            gamename.style.width = "70%";
+            let numofplayers= document.createElement('p');
+            numofplayers.style.width = "30%";
+            numofplayers.textContent= "Players: "+y[x].PID.length;// get all players in the game 
+            lobby.appendChild(gamename);
+            lobby.appendChild(numofplayers);
+            // only allows a game to be clickable if there are less than 8 players in the game
+            if(y[x].PID.length< 8){
+                lobby.addEventListener("mouseover", function(event){
+                lobby.style.opacity= "1";
+                lobby.style.cursor="pointer";
+            })
+            lobby.addEventListener("mouseout", function(){
+
+                lobby.style.opacity= "0.8";
+                lobby.style.cursor="auto";
+            })
+            // onclick get the lobby id and name
+                lobby.addEventListener("click", function(){
+                clearInterval(interval);
+                interval = null;
+                let lobbyid = lobby.id;
+                let lobbyname = y[x].GNAME;
+                content.innerHTML = "";
+                // get username pop up
+            // Create a new div element
+            let popup = document.createElement("div");
+            // Set the styling for the div element
+            popup.style.position = "fixed";
+            popup.style.top = "50%";
+            popup.style.left = "50%";
+            popup.style.transform = "translate(-50%, -50%)";
+            popup.style.backgroundColor = "white";
+            popup.style.padding = "20px";
+            popup.style.border = "1px solid black";
+            content.appendChild(popup);
+            // Create a heading element for the popup
+            let heading = document.createElement("h2");
+            heading.innerHTML = "What's your name?";
+            popup.appendChild(heading);
+
+            // Create an input element for the user's name
+            let nameInput = document.createElement("input");
+            nameInput.type = "text";
+            nameInput.placeholder = "Enter your name";
+            nameInput.style.borderRadius= "7px";
+            nameInput.style.padding= "10px";
+            nameInput.style.border= "none";
+            nameInput.style.marginbottom="10px";
+            popup.appendChild(nameInput);
+
+            // Create a submit button for the popup
+            let submitBtn = document.createElement("button");
+            submitBtn.style.width = 20
+            submitBtn.innerHTML = "Submit";
+            //join game after submit button clicked for name
+            submitBtn.onclick = function() {
+            let name = nameInput.value;
+            // join game using the game id, name, and username
+            if (name) {
+                joingame(name,lobbyid,lobbyname)
+            }
+            };
+            popup.appendChild(submitBtn);
+
+            // Create a cancel button for the popup if the user refuses to enter name and restart intervals
+            let cancelBtn = document.createElement("button");
+            cancelBtn.innerHTML = "Cancel";
+            cancelBtn.onclick = function(){
+                content.removeChild(popup);
+                interval = setInterval(createlobbies, 1000);
+            };
+            popup.appendChild(cancelBtn);
+            let buttons = document.querySelectorAll("button");
+            buttons.forEach(x=>{
+                x.style.margin="3px";
+                x.style.backgroundColor= "#4CAF50";
+                x.style.color= "#fff";
+                x.style.border= "none";
+                x.style.height= "40px";
+                x.style.width= "30px%";
+                x.style.borderRadius= "5px";
+                x.style.cursor= "pointer";
+            })
+           })
+            }
+            
+            
+            content.appendChild(lobby);}
+            
+            
+  });
+  
+       
+    }
+    // run the create lobby function
+    createlobbies();
+    // check every 3s for changes and update
+    interval = setInterval(createlobbies, 3000);
+
+    //join game and move user to lobby
+    function joingame(playername, gameid, gamename){
+        let mybody = {
+        playern: playername,
+		gid: gameid,
+        gn : gamename
+    };
+    fetch("/joingamelobby", { method: "POST", headers: {
+        "Content-Type": "application/json",}, // says that arguments are JSON formatted
+     body: JSON.stringify(mybody), // POST puts arguments in the message body
+    })
+      .then((response) => response.json()) // we are expecting a text response
+        .then((data) => {
+			window.location.href="/movetolobby"; });
+    }
+
+    async function getmycookie(){
+  return new Promise((resolve, reject) => {
+        fetch("/myCookie")
+        .then((response) => (response.json()))
+        .then((data) =>{
+            console.log(data);
+            resolve(data);
+
+
+            if(data != null){
+                
+				window.location.replace("/game");
+            }
+            /*
+            resolve(data);
+            if(data == "Invalid cookie value"){
+            }
+			else{
+				window.location.href="/game"; 
+			}*/
+        })})};
+</script>
+</html>
