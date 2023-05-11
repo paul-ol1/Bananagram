@@ -968,7 +968,7 @@ async function onquit() {
   let mybody = {
     PlayerID: yourid,
   };
-
+  console.log(mybody);
   fetch("/removeplayeringame", {
     method: "POST",
     headers: {
